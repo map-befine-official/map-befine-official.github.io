@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 12:38:51 GMT</lastBuildDate><item><title><![CDATA[포스트 작성 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. 첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다. Repository Local 로 Clone 해오기 본인이 원하는 Directory…]]></description><link>https://map-befine-official.github.io/how-to-write-a-post/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-write-a-post/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 15:17:38 GMT</lastBuildDate><item><title><![CDATA[포스트 작성 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. 첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다. Repository Local 로 Clone 해오기 본인이 원하는 Directory…]]></description><link>https://map-befine-official.github.io/how-to-write-a-post/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-write-a-post/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;매튜&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다.&lt;/p&gt;
@@ -44,7 +44,7 @@
 &lt;h2&gt;글 올리기!&lt;/h2&gt;
 &lt;p&gt;글을 모두 작성하셨다면 이제 올리기만 하면 될 겁니다.&lt;/p&gt;
 &lt;p&gt;아주 쉽습니다.&lt;/p&gt;
-&lt;p&gt;그냥 main 브랜치에 push 를 하시면되요!&lt;/p&gt;
+&lt;p&gt;그냥 main 브랜치에 push 를 하시면돼요!&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;.github/workflows/deploy.yml&lt;/code&gt; 로 인해서 push 만 하셔도 배포 될겁니다.&lt;/p&gt;
 &lt;p&gt;야물딱지죠?&lt;/p&gt;
 &lt;p&gt;우리 글도 한번 야무지게 써봅시다!&lt;/p&gt;
