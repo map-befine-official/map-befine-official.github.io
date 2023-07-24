@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://map-befine-official/sitemap-index.xml
-Host: https://map-befine-official
+Sitemap: https://map-befine-official.github.io/sitemap-index.xml
+Host: https://map-befine-official.github.io
