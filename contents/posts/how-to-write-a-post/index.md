@@ -7,7 +7,7 @@ tags:
   - 블로그
 ---
 
-> 이 글은 우테코 괜찮을지도팀의 `매튜` 작성했습니다
+> 이 글은 우테코 괜찮을지도팀의 `매튜`가 작성했습니다.
 
 첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다.
 
@@ -29,7 +29,7 @@ Repository 를 Local 로 가져오셨다면, 이제 글을 작성해봅시다!
 cd map-befine-official.github.io
 ```
 
-위 명령어를 통해서 map-befine-official.github.io 에 Directory 에 들어가주시면 Contents Directory가 보이실 겁니다.
+위 명령어를 통해서 map-befine-official.github.io 에 Directory 에 들어가주시면 Contents Directory 가 보이실 겁니다.
 
 여기서 
 
@@ -47,7 +47,7 @@ cd contents/posts
 cd how-to-write-a-post
 ```
 
-위와 같은 명령으를 통해 이동해주었습니다.
+위와 같은 명령어를 통해 이동 해주었습니다.
 
 ![](.index_image/command.png)
 
@@ -63,7 +63,7 @@ cd how-to-write-a-post
 
 아주 쉽습니다.
 
-그냥 main 브랜치에 push 를 하시면되요!
+그냥 main 브랜치에 push 를 하시면돼요!
 
 `.github/workflows/deploy.yml` 로 인해서 push 만 하셔도 배포 될겁니다.
 
