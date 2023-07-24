@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 12:33:07 GMT</lastBuildDate><item><title><![CDATA[포스트 작성 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다 첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다. Repository Local 로 Clone 해오기 본인이 원하는 Directory…]]></description><link>https://map-befine-official.github.io/how-to-write-a-post/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-write-a-post/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;매튜&lt;/code&gt;가 작성했습니다&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 12:38:51 GMT</lastBuildDate><item><title><![CDATA[포스트 작성 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. 첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다. Repository Local 로 Clone 해오기 본인이 원하는 Directory…]]></description><link>https://map-befine-official.github.io/how-to-write-a-post/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-write-a-post/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;매튜&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;첫 글은 포스트 작성법에 대해서 다루어보도록 하겠습니다.&lt;/p&gt;
 &lt;h3&gt;Repository Local 로 Clone 해오기&lt;/h3&gt;
@@ -9,14 +9,14 @@
 &lt;h2&gt;글 작성하기&lt;/h2&gt;
 &lt;p&gt;Repository 를 Local 로 가져오셨다면, 이제 글을 작성해봅시다!&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; map-befine-official.github.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위 명령어를 통해서 map-befine-official.github.io 에 Directory 에 들어가주시면 Contents Directory가 보이실 겁니다.&lt;/p&gt;
+&lt;p&gt;위 명령어를 통해서 map-befine-official.github.io 에 Directory 에 들어가주시면 Contents Directory 가 보이실 겁니다.&lt;/p&gt;
 &lt;p&gt;여기서 &lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; contents/posts&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;위 명령어를 통해 contents/posts 디렉토리 내부까지 가고&lt;/p&gt;
 &lt;p&gt;본인이 작성하고자 하는 주제에 걸맞는 이름으로 Directory 를 생성한 후, 만드신 Directory까지 들어가주세요&lt;/p&gt;
 &lt;p&gt;저 같은 경우는 Directory 명을 how-to-write-a-post 로 지었기 때문에&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; how-to-write-a-post&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위와 같은 명령으를 통해 이동해주었습니다.&lt;/p&gt;
+&lt;p&gt;위와 같은 명령어를 통해 이동 해주었습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
       &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/afac0117c60ff7905d6f9cb98860a235/5b89d/command.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
     &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 23.52941176470588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAABWElEQVR42iWPSzNCcRyG+2A2DEIakZBUpxviZFD/CBvUOaeT+wwRili4RO6XhTHjK5ixsuGLPP5l8cwzv3fx/ua1LK4V0fd1jEOVhbVhHA4bzm4nA71uXH1e1HQBX9JkKK5L5/CKrPQKPpGr3/6ZVZTUBsrsKp5pDUuu/MpG5YSt6ib6sUkwlmRUxFDnPYzM+HGrKTq9MdoHx+jwjGMbUqXVemYdjNLSP0KrO4p1YJQmZxCLeVhBz19IriUVzINbdp9O2XuZxTxPMLZoEBY6IbFMMJEmnNQISWruiQhs3gnsgWnsyiRt8qksrJI9uKyjF85I5y9ZvyiweZVAOxEE5zMocQ0lkSEgMvjiS0RSJq7oHJ3KFF0hgSOcpCssy/1TtcnPGKU7skf36MVbtP0qRvEGs/yAcfxI/v2Xnbcf9j6+Ofo8o/xVIr69TLMzQmNP4B85tUaD3cMfEnvzTyzTjc4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
