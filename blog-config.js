@@ -1,14 +1,10 @@
 module.exports = {
-  title: "hoodie",
-  description: "Hello :) I'm Hudi who developed gatsby-starter-hoodie theme.",
-  author: "Hudi",
-  siteUrl: "https://devhudi.github.io/gatsby-starter-hoodie/",
+  title: "괜찮을지도",
+  description: "안녕하세요! 괜찮을지도 기술블로그입니다.",
+  author: "괜찮을지도",
+  siteUrl: "https://map-befine-official",
   links: {
-    github: "https://github.com/devHudi",
-    linkedIn: "https://linkedin.com",
-    facebook: "https://www.facebook.com",
-    instagram: "https://www.instagram.com",
-    email: "mailto:devhudi@gmail.com",
+    github: "https://github.com/woowacourse-teams/2023-map-befine",
   },
   utterances: {
     repo: "devHudi/gatsby-starter-hoodie",
