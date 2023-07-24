@@ -1,0 +1,30 @@
+name: Deploy
+
+on: # 어떤 작업이 수행될 때 deploy.yml 작업이 수행된다. (트리거)
+  push: # push 작업이 수행될 때
+    branches: # 특정 브랜치를 대상으로
+      - main
+
+permissions: # github action이 수행되는 환경에서 특정 권한을 준다
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 20.3.1
+
+      - name: Install node packages
+        run: yarn
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public
+
