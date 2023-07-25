@@ -7,7 +7,7 @@ module.exports = {
     github: "https://github.com/woowacourse-teams/2023-map-befine",
   },
   utterances: {
-    repo: "devHudi/gatsby-starter-hoodie",
+    repo: "map-befine-official/map-befine-official.github.io",
     type: "pathname",
   },
 }
