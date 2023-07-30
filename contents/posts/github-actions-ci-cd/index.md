@@ -222,7 +222,7 @@ jobs:
         if: always()
 ```
 
-### 프론트엔드 CI workflow
+### 프론트엔드 CI/CD workflow
 ```yaml
 name: Frontend develop CI/CD
 
