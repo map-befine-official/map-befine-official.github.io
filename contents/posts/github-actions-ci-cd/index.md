@@ -9,7 +9,7 @@ tags:
 
 > 이 글은 우테코 괜찮을지도팀의 `도이`가 작성했습니다.
 
-보다 편리하고 안정적인 개발 및 배포를 위해, 괜찮을지도 서비스에 CI/CD를 적용하였습니다.
+보다 편리하고 안정적인 개발 및 배포를 위해, 괜찮을지도 서비스에 CI/CD를 적용하였습니다.  
 이를 위한 도구로 GitHub Actions(self hosted runner)를 선택한 이유와, 파이프라인, 적용 방법에 대해 설명드리겠습니다.
 
 ## GitHub Actions를 사용한 이유
@@ -159,7 +159,7 @@ permissions:
   
 jobs:
   build-and-upload:    
-    # 브랜치를 그냥 닫은 게 아니라, merge했을 때만 실행
+    # Pull Request를 그냥 닫은 게 아니라, merge해서 닫았을 때만 실행
     if: github.event.pull_request.merged
     
     runs-on: ubuntu-22.04
@@ -187,12 +187,12 @@ jobs:
         path: backend/build/libs/mapbefine.jar
 
   deploy:
-     # 브랜치를 그냥 닫은 게 아니라, merge했을 때만 실행
+     # Pull Request를 그냥 닫은 게 아니라, merge해서 닫았을 때만 실행
      if: github.event.pull_request.merged
 
      # deploy는 build-and-upload 작업과 달리 self-hosted runner를 사용
      # main, develop 브랜치마다 각각 운영 서버, 개발 서버의 runner만을 실행하도록 해야 함
-     runs-on: [ self-hosted, dev ]
+     runs-on: [ self-hosted, dev ]를
      # build-and-upload 작업이 성공적으로 완료될 경우 실행
      needs: build-and-upload
   
@@ -222,7 +222,10 @@ jobs:
         if: always()
 ```
 
-### 프론트엔드 CI/CD workflow
+### 프론트엔드 CI workflow
+프론트엔드 CI는 추후 테스트와 함께 적용 예정입니다.  
+
+### 프론트엔드 CD workflow
 ```yaml
 name: Frontend develop CI/CD
 
