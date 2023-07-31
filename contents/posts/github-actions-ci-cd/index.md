@@ -378,6 +378,8 @@ $ ./config.sh --url ${repository URL} --token ${runner 생성 페이지에서 �
    ```
 
 참고로 서버 내 저장한 환경변수를 업데이트 했을 때에는, Runner도 재시작하기를 잊지 마세요!  
+왜일까요? 자세한 내용은  
+[EC2 환경 변수 적용 및 Actions Runner에 환경 변수 적용이 안되는 이슈](https://map-befine-official.github.io/trouble-shooting-actions-runner)에서 확인하실 수 있습니다.
 
 
 ## 참고 자료
