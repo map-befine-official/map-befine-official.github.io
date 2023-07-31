@@ -92,7 +92,7 @@ CI/CD 파이프라인은 다음과 같습니다.
 아래는 현재 적용된 workflow입니다. 이해를 돕기 위해 주석을 추가하였습니다.  
 ### 백엔드 CI workflow
 ```yaml
-name: Backend Automatically Build On Pull request 
+name: Backend CI For Test Validation
 
 # 트리거 설정
 on:
@@ -110,7 +110,7 @@ permissions:
   
 # 수행할 작업들
 jobs:
-  build-and-upload:
+  build-and-comment:
     # 해당 job을 실행할 환경 설정
     runs-on: ubuntu-22.04
 
@@ -146,7 +146,7 @@ jobs:
 
 ### 백엔드 CD workflow
 ```yaml
-name: Backend develop CD
+name: Backend develop CI/CD
 
 on:
   workflow_dispatch:
@@ -211,7 +211,7 @@ jobs:
           path: /home/ubuntu/backend/build/
 
       - name: 배포하기
-        run: /home/ubuntu/backend/build/deploy.sh
+        run: /home/ubuntu/backend/deploy.sh
 
       - name: 슬랙 메시지 보내기
 
@@ -231,7 +231,7 @@ jobs:
 
 ### 프론트엔드 CD workflow
 ```yaml
-name: Frontend develop CI/CD
+name: Frontend develop CD
 
 on:
   workflow_dispatch:
