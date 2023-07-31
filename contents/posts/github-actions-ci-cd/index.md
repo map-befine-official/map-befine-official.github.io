@@ -75,7 +75,6 @@ CI/CD 파이프라인은 다음과 같습니다.
 3. 대상이 프론트엔드 / 백엔드
 
 세 가지 상황을 고려하여 여러 개의 `workflow`를 작성했습니다.  
-(이로 인해 설정 파일의 중복 내용이 발생하는 문제에 대해서는 추후 개선 예정입니다.)
 
 ![](.index_image/workflows-dev.jpeg)
 ![](.index_image/workflows-prod.jpeg)
