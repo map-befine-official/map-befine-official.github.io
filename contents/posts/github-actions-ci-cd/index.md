@@ -36,13 +36,18 @@ Jenkins와 GitHub Actions가 고려 대상이었습니다.
 
 1. 메모리 부담 최소화
    - Jenkins를 사용하면, EC2에서 빌드 및 테스트를 수행해야 합니다.
-   - GitHub Actions는 GitHub Artifact에 업로드한 빌드 결과물을 EC2에서 다운로드하면 되기 때문에, 메모리 부담이 덜 할 것이라 예상했습니다.
+   - 반면, GitHub Actions는 GitHub Artifact에 업로드한 빌드 결과물을 EC2에서 다운로드하면 됩니다.
+   - 실제로 한 팀원이 EC2 t2g.micro에 젠킨스 CI/CD를 적용했다가, 메모리가 부족해 서버가 죽는 과거의 경험을 공유해주었습니다.
+   - 때문에 적어도 CI 만큼은 GitHub Actions로 분리해 테스트 실행을 외부 서비스에 위임하기로 했습니다.
+   - 하지만 그렇다면, 간결한 파이프라인을 위해 CI/CD를 모두 GitHub Actions로 통합하는 것이 좋다고 판단했습니다.
+   > 실제로 가동중인 상황에서 확인해본 결과, 전체 메모리의 최대 0.7%만을 사용함을 알 수 있었습니다.   
+   ![actions-runner-usage.png](.index_image/actions-runner-usage.png)
 2. 쉽고 빠른 적용 
    - GitHub 레포지토리에서 바로 설정이 가능해 기존 개발 환경과 통합해 사용 가능합니다.
    - YAML 파일 작성만으로도 쉽고 빠른 적용이 가능합니다.
-   - GitHub가 runner를 관리해주기 때문에, 서버 관리 부담이 덜합니다.
-
-
+   - GitHub가 Runner를 관리해주기 때문에, 서버 관리 부담이 덜합니다.
+  
+  
 ## CI/CD 파이프라인
 ![](.index_image/cicd-pipeline.jpeg)
 CI/CD 파이프라인은 다음과 같습니다.  
