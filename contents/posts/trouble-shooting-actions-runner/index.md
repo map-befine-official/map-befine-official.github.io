@@ -66,6 +66,7 @@ nohup sudo -E java -jar $JAR_FILE_PATH/mapbefine.jar --spring.profiles.active=$p
 하지만, Actions Runner를 통해 CD를 수행하는 경우 아래와 같이 환경 변수가 적용되지 않았습니다.
 ![](.index_image/active-profile-default.png)
 
+### 원인 및 문제 해결
 우리는 위 문제를 해결하기 위해, 아래와 같이 우리의 상황을 정리하였습니다.
 1. 터미널에서 쉘 스크립트를 실행할 경우, 환경 변수가 적용된다.
 2. Actions Runner를 통해 쉘 스크립트를 실행할 경우, 환경변수가 적용되지 않는다.
