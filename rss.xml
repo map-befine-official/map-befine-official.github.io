@@ -1,4 +1,160 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 01 Aug 2023 02:24:05 GMT</lastBuildDate><item><title><![CDATA[인수테스트에서 테스트 격리하기!]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다I 테스트 간 격리.. 왜 필요할까? 우리는 프로덕션 코드의 신뢰성을 보장하기 위해서 테스트 코드를 작성한다. 그렇기 때문에, 테스트 코드는 100번을 실행시키던 10…]]></description><link>https://map-befine-official.github.io/how-to-isolating-test/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-isolating-test/</guid><pubDate>Mon, 31 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 01 Aug 2023 03:15:31 GMT</lastBuildDate><item><title><![CDATA[괜찮을지도의 Nginx 활용법]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다. 지난 글 GitHub Actions로 CI/CD 구축하기에서 현재 저희 프로젝트의 인프라 구조를 간략하게 이미지로 설명드렸습니다. 다시 이미지를 보여드리자면, 서버의 앞단에서 Nginx…]]></description><link>https://map-befine-official.github.io/how-to-use-nginx/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-use-nginx/</guid><pubDate>Tue, 01 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우아한테크코스 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;도이&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;지난 글 &lt;a href=&quot;https://map-befine-official.github.io/github-actions-ci-cd&quot;&gt;GitHub Actions로 CI/CD 구축하기&lt;/a&gt;에서&lt;br&gt;
+현재 저희 프로젝트의 인프라 구조를 간략하게 이미지로 설명드렸습니다.&lt;/p&gt;
+&lt;p&gt;다시 이미지를 보여드리자면, 서버의 앞단에서 Nginx를 사용하고 있는데요.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/45ee08747158f5004979e90c9b76cdf4/77dcf/infra_nginx.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 41.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR42oVSy27CMBDMn/cXOFH1E3rsseqtFw4UIQUUDhxQAgkOSdqEOLEdP6a2UyhIlbrS2Ct7PfsYB8YY3OJP0wqQ/Arjdj2ANhWOJEe+fAN7f/ShgVuGYfC4mFIKUkoPn0QJaJfQXV6TGnDGoK0n2wqKbOyRRlDXNRaLBebzOZzvSIqiQBzHSJIEXc+AvoUhR6iihOlrCEsgbdJ4H4Nz/sNvqdWAYL1eoyxLnE4nRFHkq3PVUkohhBiDSYbNMURKdlA5wZm2kIPEfpeCdeyecLVaYTqdYjKZIAxDX2FVVZ6waRp03D44U7x8PCPazrzf2aq0UZglr2i4bVdqCBs38G6cYZZlSNPUJ3JVudbdWU4I+r53qsAcDjBfNYxo8JlnaDnF0/IB+/MWA1N2NBS8a0fCf80pa1vycmjpBVG2kzzNwXv2+xNcy6Nw91/m4pursnY+UoxwhPahx63vYOO+AbnzZ8zbpmA1AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;infra_nginx.png&apos; title=&apos;&apos; src=&apos;/static/45ee08747158f5004979e90c9b76cdf4/ca1dc/infra_nginx.png&apos; srcset=&apos;/static/45ee08747158f5004979e90c9b76cdf4/e7570/infra_nginx.png 170w,
+/static/45ee08747158f5004979e90c9b76cdf4/f46e7/infra_nginx.png 340w,
+/static/45ee08747158f5004979e90c9b76cdf4/ca1dc/infra_nginx.png 680w,
+/static/45ee08747158f5004979e90c9b76cdf4/77dcf/infra_nginx.png 930w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;infra_nginx.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ 편의상 개발 서버, DB 서버 부분은 생략하고 확대한 이미지입니다.&lt;br&gt;
+개발 서버의 Nginx도 같은 역할을 수행합니다.&lt;br&gt;
+또, 80 포트 요청에 대해서도 443 포트로 리다이렉트해주고 있으나 이 또한 편의상 그림에는 생략하고 있습니다.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;이번 글에서는 Nginx의 모든 것에 대해 설명하기보다는 Nginx를 왜 썼는지, 어떻게 썼는지에 초점을 맞춰보도록 하겠습니다.  &lt;/p&gt;
+&lt;h2&gt;Nginx란?&lt;/h2&gt;
+&lt;p&gt;그래도 이게 뭔지 알아야겠죠? 간단하게 설명하면, 경량화된 웹 서버 프로그램입니다.&lt;br&gt;
+정적 파일을 제공하는 HTTP 서버로도, 리버스 프록시 서버로도 사용할 수 있습니다.  &lt;/p&gt;
+&lt;p&gt;이제 저희의 Nginx 설정 파일을 보면서 어떻게 활용했는지 설명드리겠습니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;설정 파일은 과거 방식으로는 /etc/nginx/sites-available 또는 /sites-enabled에서 관리하고,&lt;br&gt;
+최신 방법으로는 /etc/nginx/conf.d 디렉토리에서 관리합니다.&lt;br&gt;
+또, 전역 설정을 관리하는 파일로는 &lt;code class=&quot;language-text&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;가 있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token key attr-name&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;        # (1) HTTPS 적용 전, 서버 이름 지정&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        server_name&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;${도메인};&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;        # (1) HTTPS 적용 : SSL을 사용하여 443포트에서 수신&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        listen&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;443 ssl; # managed by Certbot&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        ssl_certificate&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/letsencrypt/live/${도메인}/fullchain.pem; # managed by Certbot&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        ssl_certificate_key&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/letsencrypt/live/${도메인}/privkey.pem; # managed by Certbot&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        include&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        ssl_dhparam&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;        # (3) 웹 서버의 루트 디렉토리 지정&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        root&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/var/www/html;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;        # (3) 웹 서버가 디렉토리를 열 때 사용할 기본 파일 지정 (나열된 순서대로 탐색)&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        index&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;index.html index.htm index.nginx-debian.html;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;        # (2, 3) 루트 URL에 대한 동작 정의 : 프론트엔드 정적 파일 서브&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        location&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/ {&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            root&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/usr/share/nginx/html/dist;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            include&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/nginx/mime.types;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            try_files&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;$uri $uri/ /index.html;&lt;/span&gt;
+        }
+
+&lt;span class=&quot;token comment&quot;&gt;        # (2) /api/ URL에 대한 동작 정의 : 백엔드 API 연결&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        location&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/api/ {&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            rewrite&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;^/api/(.*) /$1?$args break;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            proxy_pass&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;http://${서버 IP 주소}:8080;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;Host $host;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;X-Real-IP $remote_addr;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;            proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/span&gt;
+        }
+}
+
+&lt;span class=&quot;token comment&quot;&gt;# 해당 도메인에 대해 80번 포트 HTTP 요청이 오면 HTTPS로 리다이렉션&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    if&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;($host = ${도메인}) {&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;        return&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;301 https://$host$request_uri;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    }&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;# managed by Certbot&lt;/span&gt;
+    
+    
+&lt;span class=&quot;token key attr-name&quot;&gt;    listen&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;80 ;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    listen&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;[::]:80 ;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    server_name&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;${도메인};&lt;/span&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;(1) HTTPS 적용하기&lt;/h2&gt;
+&lt;p&gt;SSL 인증서만 있으면, 웹서버를 통해 쉽게 HTTPS 프로토콜을 적용할 수 있습니다.&lt;br&gt;
+무료 이용이 가능하고, &lt;code class=&quot;language-text&quot;&gt;Nginx&lt;/code&gt;와 통합하여 사용하기 좋은 &lt;code class=&quot;language-text&quot;&gt;Certbot&lt;/code&gt;을 사용해 이를 적용했습니다.&lt;br&gt;
+전체적인 흐름은 아래와 같습니다.  &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;도메인을 구매하고, 레코드 A에 public IP 주소를 등록한다.&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Cerbot&lt;/code&gt;을 설치한다.&lt;/li&gt;
+&lt;li&gt;설정 파일의 server_name을 구매한 도메인으로 변경한다.&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Certbot&lt;/code&gt;을 이용해 구매한 도메인을 이용해 SSL 인증서를 발급받는다.&lt;/li&gt;
+&lt;li&gt;인증서를 발급받으면, &lt;code class=&quot;language-text&quot;&gt;Certbot&lt;/code&gt;이 자동으로 설정 파일에서 server_name이 일치하는 블록을 찾아 SSL 관련 내용들을 추가해준다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;# managed by Certbot&lt;/code&gt;이라는 주석이 붙어있는 내용들이 &lt;code class=&quot;language-text&quot;&gt;Certbot&lt;/code&gt;이 추가해준 내용입니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Certbot&lt;/code&gt;은 SSL 인증 발급 도구로, 무료 SSL 인증서 발급 기관인 &lt;code class=&quot;language-text&quot;&gt;Let&apos;s Encrypt&lt;/code&gt;와 통합되어 있습니다.&lt;br&gt;
+이를 통해 쉽게 SSL 인증서를 발급받을 수 있습니다.&lt;br&gt;
+또, &lt;code class=&quot;language-text&quot;&gt;Nginx&lt;/code&gt; 설정 파일을 자동 업데이트하는 방식으로 SSL 인증서를 적용할 수 있어 편리합니다.
+단, 유효 기간이 90일이기 때문에 자동 갱신 설정이 별도로 필요합니다.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;하단에 첨부한 참고 자료와 같이, 잘 정리된 자료가 기존에 많기 때문에 자세한 내용은 생략하겠습니다.&lt;/p&gt;
+&lt;h2&gt;(2) 프론트엔드, 백엔드 요청 구분하기&lt;/h2&gt;
+&lt;p&gt;저희 프로젝트의 인프라 구조에서는 프론트엔드와 백엔드가 같은 서버를 공유하므로&lt;br&gt;
+클라이언트가 이용하는 화면에 대한 요청과, 백엔드 API에 대한 요청을 구분할 필요가 있었습니다.  &lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;location&lt;/code&gt; 블록을 사용해 특정 URL에 대한 동작을 설정하는 방식으로 이를 구분할 수 있었습니다.  &lt;/p&gt;
+&lt;p&gt;해당하는 부분을 가져와 설명드리겠습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 루트 URL에 대해 프론트엔드 정적 파일 서브&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/ {&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    root&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/usr/share/nginx/html/dist;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    include&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/etc/nginx/mime.types;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    try_files&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;$uri $uri/ /index.html;&lt;/span&gt;
+}
+
+&lt;span class=&quot;token comment&quot;&gt;# /api/ URL에 대해 백엔드 API 연결&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/api/ {&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    rewrite&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;^/api/(.*) /$1?$args break; # URL에서 /api 제거&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    proxy_pass&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;http://${서버 IP 주소}:8080;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;Host $host;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;X-Real-IP $remote_addr;&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;    proxy_set_header&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;X-Forwarded-For $proxy_add_x_forwarded_for;&lt;/span&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;https://mapbefine.com/api/&lt;/code&gt; 로 시작하는 URL에 대해서는 백엔드 API와 연결합니다.  &lt;/p&gt;
+&lt;p&gt;이 설정을 맞추어, 백엔드 코드에서 &lt;code class=&quot;language-text&quot;&gt;/api&lt;/code&gt;가 추가된 요청 URL을 매핑할 수도 있습니다.&lt;br&gt;
+하지만 이는 자원을 명시하기 위한 내용보다는 요청을 구분하기 위함이므로,&lt;br&gt;
+리버시 프록시를 거치고 나면 실제로는 &lt;code class=&quot;language-text&quot;&gt;/api&lt;/code&gt;를 제외한 요청 URL로 연결되도록 하였습니다.&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;# URL에서 /api 제거&lt;/code&gt; 주석이 있는 부분이 해당하는 내용입니다.  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;proxy_set_header&lt;/code&gt;는 Nginx가 프록시 요청을 전달하기 전에, HTTP 요청 헤더를 설정하는 지시문입니다.&lt;br&gt;
+원래 요청의 호스트 이름을 백엔드 서버에 전달합니다.&lt;br&gt;
+필수 설정은 아니지만 IP 기반의 접근 제어, 로깅, 다중 호스트 설정 등에 유용할 수 있다고 합니다.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;(3) 정적 파일 서브하기&lt;/h2&gt;
+&lt;p&gt;저희는 프론트엔드의 React를 서버에서 실행시키는 대신, 빌드 결과물을 정적 파일로 서브하는 방식을 택하였습니다.&lt;br&gt;
+이유는 다음과 같습니다.  &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;어플리케이션을 서버 내에 실행하여 동적으로 파일을 생성해야 하는 상황이 아닙니다.&lt;/li&gt;
+&lt;li&gt;정적 파일로 서브하여 서버 메모리를 절약할 수 있습니다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;어플리케이션을 실행시킨 상태라면, 해당하는 URL에 대해 3000번 포트로 포워딩해주면 됩니다.&lt;/p&gt;
+&lt;p&gt;반면 정적 파일로 서브한다면 어떻게 해야 할요?&lt;br&gt;
+해당하는 부분을 가져와 설명드리겠습니다.&lt;/p&gt;
+&lt;p&gt;아래 내용은 설정 파일의 기본 값과 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# (3) 웹 서버의 루트 디렉토리 지정&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;/var/www/html;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# (3) 웹 서버가 디렉토리를 열 때 사용할 기본 파일 지정 (나열된 순서대로 탐색)&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;token value attr-value&quot;&gt;index.html index.htm index.nginx-debian.html;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;https://mapbefine.com&lt;/code&gt; 요청이 들어오면, Nginx는 루트 디렉토리의 &lt;code class=&quot;language-text&quot;&gt;index.html&lt;/code&gt;을 우선적으로 찾아 반환합니다.&lt;br&gt;
+따라서 해당 웹 서버의 루트 디렉토리에 우리의 빌드 결과물인 &lt;code class=&quot;language-text&quot;&gt;index.html&lt;/code&gt;와 모듈 파일들을 위치시키면 됩니다.&lt;br&gt;
+반대로, 정적 파일을 저장하고 있는 위치를 root 값으로 설정해주어도 좋습니다.&lt;/p&gt;
+&lt;h2&gt;결론&lt;/h2&gt;
+&lt;p&gt;괜찮을지도 서버의 Nginx는&lt;br&gt;
+클라이언트와 WAS(Spring Boot) 사이에 Nginx를 두어 리버스 프록시 서버로 사용하며,&lt;br&gt;
+동시에 HTTPS 적용을 해결하고 HTTP 서버와 같이 정적 파일 서브도 수행하고 있습니다.&lt;/p&gt;
+&lt;p&gt;다만 현재 규모에서 간단한 방법을 택한 것으로,&lt;br&gt;
+서비스의 규모가 커짐에 따라 정적 파일을 별도 서버에 관리하는 것이 유리하거나 동적인 파일 생성이 필요한 경우 활용 방식은 얼마든지 달라질 수 있을 것입니다.&lt;/p&gt;
+&lt;h2&gt;참고자료&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://nginx.org/en/docs/&quot;&gt;Nginx 공식 문서&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://www.baeldung.com/linux/sites-available-sites-enabled-conf-d&quot;&gt;baledung - sites-available &amp;#x26; sites-enabled, conf.d 설정 파일 방식 차이&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://hudi.blog/https-with-nginx-and-lets-encrypt/&quot;&gt;Nginx와 Let&apos;s Encrypt로 HTTPS 웹 서비스 배포하기 (feat. Certbot)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04&quot;&gt;how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04 (Step2 부분 참고)&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[인수테스트에서 테스트 격리하기!]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다I 테스트 간 격리.. 왜 필요할까? 우리는 프로덕션 코드의 신뢰성을 보장하기 위해서 테스트 코드를 작성한다. 그렇기 때문에, 테스트 코드는 100번을 실행시키던 10…]]></description><link>https://map-befine-official.github.io/how-to-isolating-test/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-isolating-test/</guid><pubDate>Mon, 31 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우아한테크코스 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;매튜&lt;/code&gt;가 작성했습니다I&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;테스트 간 격리.. 왜 필요할까?&lt;/h2&gt;
@@ -176,7 +332,78 @@
 &lt;p&gt;지금으로서는 데이터 삭제가 쉽고, 테이블이 추가되었을 때 sql 구문을 수정하지 않아도 되는 &lt;code class=&quot;language-text&quot;&gt;Entity Manager&lt;/code&gt; 를 통해 테스트를 격리하는 것이 최선의 방법으로 보인다.&lt;/p&gt;
 &lt;p&gt;하지만, 추후에 이보다 더 좋은 방법을 발견하면, 면밀히 검토해보고 바꿀 의사가 충분하다고 생각한다.&lt;/p&gt;
 &lt;h2&gt;참고&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/&quot;&gt;https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[GitHub Actions로 CI/CD 구축하기]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. 보다 편리하고 안정적인 개발 및 배포를 위해, 괜찮을지도 서비스에 CI/CD를 적용하였습니다. 이를 위한 도구로 GitHub Actions(self hosted runner…]]></description><link>https://map-befine-official.github.io/github-actions-ci-cd/</link><guid isPermaLink="false">https://map-befine-official.github.io/github-actions-ci-cd/</guid><pubDate>Sat, 29 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/&quot;&gt;https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[EC2 환경 변수 적용 및 Actions Runner에 환경 변수 적용이 안되는 이슈]]></title><description><![CDATA[이 글은 우테코 괜찮을지도의 가 작성하였습니다. 배경 괜찮을지도 서비스는 CI/CD 툴로 Github Actions를 적용하였습니다.
+ 자세한 내용이 궁금하다면 ? 괜찮을지도 CI/CD 구축기 바로가기 프로젝트의 설정 파일(.yml)은 DB…]]></description><link>https://map-befine-official.github.io/trouble-shooting-actions-runner/</link><guid isPermaLink="false">https://map-befine-official.github.io/trouble-shooting-actions-runner/</guid><pubDate>Mon, 31 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 괜찮을지도의 &lt;code class=&quot;language-text&quot;&gt;쥬니&lt;/code&gt;가 작성하였습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;배경&lt;/h3&gt;
+&lt;p&gt;괜찮을지도 서비스는 CI/CD 툴로 Github Actions를 적용하였습니다.
+&lt;br&gt; 자세한 내용이 궁금하다면 ? &lt;a href=&quot;/contents/posts/github-actions-ci-cd/index.md&quot;&gt;괜찮을지도 CI/CD 구축기 바로가기&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;프로젝트의 설정 파일(.yml)은 DB 주소 등 민감한 정보를 담고 있었기 때문에, 이를 저장소에 그대로 업로드할 수 없었습니다.
+&lt;br&gt;위 문제점을 해결하기 위한 과정과 실제 우리가 직면한 문제를 설명해 드리고자 합니다.&lt;/p&gt;
+&lt;h3&gt;환경변수 적용&lt;/h3&gt;
+&lt;p&gt;괜찮을지도는 환경 변수를 활용하여 민감한 정보를 숨기기로 했습니다.
+이에 따라, 각 배포 환경(prod, dev)에 맞는 설정 파일을 아래와 같이 작성하였습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# `application-dev`의 일부 &lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;spring&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;datasource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;driver-class-name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; com.mysql.cj.jdbc.Driver
+    &lt;span class=&quot;token key atrule&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;MYSQL_DATABASE_URL&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; 
+    &lt;span class=&quot;token key atrule&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;MYSQL_DATABASE_USER_NAME&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;MYSQL_DATABASE_PASSWORD&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설정 파일에서 사용한 환경 변수는 각 EC2 인스턴스에서 관리하도록 하였습니다.
+&lt;br&gt;EC2 인스턴스에 환경변수를 적용하는 방법은 아래와 같습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;1. EC2 터미널에 접속한다.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;2. &apos;sudo vim ~/.bashrc&apos; 명령어를 입력한다.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;3. .bashrc 파일의 맨 아래에 아래와 같이 필요한 환경변수를 입력한 뒤, 저장한다.&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# 기존 .bashrc 코드 생략 &lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;# Database&lt;/span&gt;
+&lt;span class=&quot;token builtin class-name&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;profile&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;dev&apos;&lt;/span&gt;
+&lt;span class=&quot;token builtin class-name&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;MYSQL_DATABASE_URL&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Database url&apos;&lt;/span&gt;
+&lt;span class=&quot;token builtin class-name&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;MYSQL_DATABASE_USER_NAME&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;User name&apos;&lt;/span&gt;
+&lt;span class=&quot;token builtin class-name&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;MYSQL_DATABASE_PASSWORD&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;Password&apos;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;4. &apos;source ~/.bashrc&apos; 명령어를 입력하여 환경변수를 업데이트해 준다.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;5. &apos;echo $profile&apos; 명령어를 입력하여 환경변수가 적용되었는지 확인한다.&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;환경 변수가 Actions Runner 동작에 적용되지 않는 이슈&lt;/h3&gt;
+&lt;p&gt;우리는 위 과정을 통해, 환경 변수가 EC2에 올바르게 적용된 것을 확인했습니다.
+&lt;br&gt;실제로, 아래와 같은 명령어를 통해 어플리케이션을 실행할 경우 &lt;code class=&quot;language-text&quot;&gt;profile&lt;/code&gt;로 설정한 환경변수인 dev가 올바르게 적용되는 것을 확인할 수 있었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# $JAR_FILE_PATH는 &apos;deploy.sh&apos; 파일 내에 존재하는 jar 파일의 경로를 나타내는 변수입니다.&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;nohup&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-E&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-jar&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;$JAR_FILE_PATH&lt;/span&gt;/mapbefine.jar &lt;span class=&quot;token parameter variable&quot;&gt;--spring.profiles.active&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$profile&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;$JAR_FILE_PATH&lt;/span&gt;/deploy.log &lt;span class=&quot;token operator&quot;&gt;&lt;span class=&quot;token file-descriptor important&quot;&gt;2&lt;/span&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;$JAR_FILE_PATH&lt;/span&gt;/deploy-err.log &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/aeefe9b57b1e8d4ae02a373d8e985894/d50f3/active-profile-dev.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAlklEQVR42nVO0Q6DIBDzRQHRRFQIczFOUED///+6gyW+7aFpr9f0rpq1gRonjASlxsJd34Mx9hdtKyG7DlJK0i2EEOCcF1TL8sa+O1j7gqbyPA/DgLquKcBKiDH+cNM0j5+LhOC/Q6VQoEop4bouxJgQQiR9QxuDaZ7hnIPzDsdx4DxPbJ+N/AnruhbPe18yeRdioKcsvv8eSSlotqJIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;active profile dev&apos; title=&apos;&apos; src=&apos;/static/aeefe9b57b1e8d4ae02a373d8e985894/ca1dc/active-profile-dev.png&apos; srcset=&apos;/static/aeefe9b57b1e8d4ae02a373d8e985894/e7570/active-profile-dev.png 170w,
+/static/aeefe9b57b1e8d4ae02a373d8e985894/f46e7/active-profile-dev.png 340w,
+/static/aeefe9b57b1e8d4ae02a373d8e985894/ca1dc/active-profile-dev.png 680w,
+/static/aeefe9b57b1e8d4ae02a373d8e985894/02d09/active-profile-dev.png 1020w,
+/static/aeefe9b57b1e8d4ae02a373d8e985894/9d567/active-profile-dev.png 1360w,
+/static/aeefe9b57b1e8d4ae02a373d8e985894/d50f3/active-profile-dev.png 2788w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;하지만, Actions Runner를 통해 CD를 수행하는 경우 아래와 같이 환경 변수가 적용되지 않았습니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/203870e569e82274f809e7b13f7f26cc/346de/active-profile-default.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 14.117647058823529%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAnElEQVR42lWO2w6CMBBEeXF7E6NCUWhDxRrbB2iC//9vY0FM9OFkTiaZ7Ba6uUI3F1Rao9YNysMRxBhYhhjlpNW/EBE45xmx8e+F9w+0bYe61mg7g9O5wm4ZMf4z2Jx9XEoJpRSEEGtKmT13y8EipYRxHDMTFjfG5k81niEgxIApTZhfM+7eY1+WMLaDuzk459D3/cowDLDWIsaIN/1/SWo3y4voAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;active profile default&apos; title=&apos;&apos; src=&apos;/static/203870e569e82274f809e7b13f7f26cc/ca1dc/active-profile-default.png&apos; srcset=&apos;/static/203870e569e82274f809e7b13f7f26cc/e7570/active-profile-default.png 170w,
+/static/203870e569e82274f809e7b13f7f26cc/f46e7/active-profile-default.png 340w,
+/static/203870e569e82274f809e7b13f7f26cc/ca1dc/active-profile-default.png 680w,
+/static/203870e569e82274f809e7b13f7f26cc/02d09/active-profile-default.png 1020w,
+/static/203870e569e82274f809e7b13f7f26cc/9d567/active-profile-default.png 1360w,
+/static/203870e569e82274f809e7b13f7f26cc/346de/active-profile-default.png 2770w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;원인 및 문제 해결&lt;/h3&gt;
+&lt;p&gt;우리는 위 문제를 해결하기 위해, 아래와 같이 우리의 상황을 정리하였습니다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;터미널에서 쉘 스크립트를 실행할 경우, 환경 변수가 적용된다.&lt;/li&gt;
+&lt;li&gt;Actions Runner를 통해 쉘 스크립트를 실행할 경우, 환경변수가 적용되지 않는다.&lt;/li&gt;
+&lt;li&gt;CI/CD를 구축한 뒤에 환경 변수를 적용했다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;위 상황을 통해, 우리는 환경 변수를 적용하기 전, 이미 실행되고 있었던 Actions Runner에 환경변수가 적용되지 않았음을 직감할 수 있었습니다.
+&lt;br&gt;실제로, 환경 변수는 프로세스가 시작될 때 해당 프로세스에게 제공되는 환경 설정의 일부이기 때문에, 위와 같은 문제가 발생한 것이었습니다.&lt;/p&gt;
+&lt;p&gt;기존에 실행되고 있었던 Actions Runner 프로세스를 종료한 후, 재시작을 하였고 환경 변수가 올바르게 적용되는 것을 확인할 수 있었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[GitHub Actions로 CI/CD 구축하기]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. 보다 편리하고 안정적인 개발 및 배포를 위해, 괜찮을지도 서비스에 CI/CD를 적용하였습니다. 이를 위한 도구로 GitHub Actions(self hosted runner…]]></description><link>https://map-befine-official.github.io/github-actions-ci-cd/</link><guid isPermaLink="false">https://map-befine-official.github.io/github-actions-ci-cd/</guid><pubDate>Sat, 29 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;도이&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;보다 편리하고 안정적인 개발 및 배포를 위해, 괜찮을지도 서비스에 CI/CD를 적용하였습니다.&lt;br&gt;
