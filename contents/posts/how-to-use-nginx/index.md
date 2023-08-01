@@ -16,7 +16,8 @@ tags:
 
 ![infra_nginx.png](.index_image/infra_nginx.png)
 > ⚠️ 편의상 개발 서버, DB 서버 부분은 생략하고 확대한 이미지입니다.  
-> 개발 서버의 Nginx도 같은 역할을 수행합니다.
+> 개발 서버의 Nginx도 같은 역할을 수행합니다.  
+> 또, 80 포트 요청에 대해서도 443 포트로 리다이렉트해주고 있으나 이 또한 편의상 그림에는 생략하고 있습니다.  
  
 이번 글에서는 Nginx의 모든 것에 대해 설명하기보다는 Nginx를 왜 썼는지, 어떻게 썼는지에 초점을 맞춰보도록 하겠습니다.  
 
@@ -27,7 +28,8 @@ tags:
 이제 저희의 Nginx 설정 파일을 보면서 어떻게 활용했는지 설명드리겠습니다.
 
 > 설정 파일은 과거 방식으로는 /etc/nginx/sites-available 또는 /sites-enabled에서 관리하고,  
-> 최신 방법으로는 /etc/nginx/conf.d 디렉토리에서 관리합니다.
+> 최신 방법으로는 /etc/nginx/conf.d 디렉토리에서 관리합니다.  
+> 또, 전역 설정을 관리하는 파일로는 `/etc/nginx/nginx.conf`가 있습니다.
 ```properties
 server {
         # (1) HTTPS 적용 전, 서버 이름 지정
@@ -137,12 +139,10 @@ location /api/ {
 이유는 다음과 같습니다.  
 1. 어플리케이션을 서버 내에 실행하여 동적으로 파일을 생성해야 하는 상황이 아닙니다.
 2. 정적 파일로 서브하여 서버 메모리를 절약할 수 있습니다.
-3. 지속적 배포가 구축되어 있기 때문에 빌드 결과물을 업데이트하는 과정에 번거로움도 없습니다.  
-**(이유 맞는지 확인)**
 
 어플리케이션을 실행시킨 상태라면, 해당하는 URL에 대해 3000번 포트로 포워딩해주면 됩니다.
 
-반면 정적 파일로 서브한다면 어떻게 해야 할까요?  
+반면 정적 파일로 서브한다면 어떻게 해야 할요?  
 해당하는 부분을 가져와 설명드리겠습니다.
 
 아래 내용은 설정 파일의 기본 값과 같습니다.
@@ -157,7 +157,7 @@ index index.html index.htm index.nginx-debian.html;
 `https://mapbefine.com` 요청이 들어오면, Nginx는 루트 디렉토리의 `index.html`을 우선적으로 찾아 반환합니다.  
 따라서 해당 웹 서버의 루트 디렉토리에 우리의 빌드 결과물인 `index.html`와 모듈 파일들을 위치시키면 됩니다.  
 반대로, 정적 파일을 저장하고 있는 위치를 root 값으로 설정해주어도 좋습니다.
-가
+ 
 ## 결론
 괜찮을지도 서버의 Nginx는  
 클라이언트와 WAS(Spring Boot) 사이에 Nginx를 두어 리버스 프록시 서버로 사용하며,  
@@ -171,3 +171,4 @@ index index.html index.htm index.nginx-debian.html;
 [Nginx 공식 문서](https://nginx.org/en/docs/)  
 [baledung - sites-available & sites-enabled, conf.d 설정 파일 방식 차이](https://www.baeldung.com/linux/sites-available-sites-enabled-conf-d)  
 [Nginx와 Let's Encrypt로 HTTPS 웹 서비스 배포하기 (feat. Certbot)](https://hudi.blog/https-with-nginx-and-lets-encrypt/)  
+[how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04 (Step2 부분 참고)](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04)
