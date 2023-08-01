@@ -62,6 +62,18 @@ server {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 }
+
+# 해당 도메인에 대해 80번 포트 HTTP 요청이 오면 HTTPS로 리다이렉션
+server {
+    if ($host = ${도메인}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+    
+    
+    listen 80 ;
+    listen [::]:80 ;
+    server_name ${도메인};
+}
 ```
 
 ## (1) HTTPS 적용하기
@@ -83,8 +95,6 @@ SSL 인증서만 있으면, 웹서버를 통해 쉽게 HTTPS 프로토콜을 적
 > 단, 유효 기간이 90일이기 때문에 자동 갱신 설정이 별도로 필요합니다.  
 
 하단에 첨부한 참고 자료와 같이, 잘 정리된 자료가 기존에 많기 때문에 자세한 내용은 생략하겠습니다.
- 
-**(redirect 설정 추가하기)**
 
 ## (2) 프론트엔드, 백엔드 요청 구분하기
 저희 프로젝트의 인프라 구조에서는 프론트엔드와 백엔드가 같은 서버를 공유하므로  
@@ -147,7 +157,7 @@ index index.html index.htm index.nginx-debian.html;
 `https://mapbefine.com` 요청이 들어오면, Nginx는 루트 디렉토리의 `index.html`을 우선적으로 찾아 반환합니다.  
 따라서 해당 웹 서버의 루트 디렉토리에 우리의 빌드 결과물인 `index.html`와 모듈 파일들을 위치시키면 됩니다.  
 반대로, 정적 파일을 저장하고 있는 위치를 root 값으로 설정해주어도 좋습니다.
-
+가
 ## 결론
 괜찮을지도 서버의 Nginx는  
 클라이언트와 WAS(Spring Boot) 사이에 Nginx를 두어 리버스 프록시 서버로 사용하며,  
