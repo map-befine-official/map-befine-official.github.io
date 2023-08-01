@@ -138,6 +138,8 @@ public class ExampleTest {
 ```java
 @Componenet  
 public class DatabaseCleanup implements InitializingBean {  
+
+	private static final String UNDERSCORE = "_";
   
     @PersistenceContext  
     private EntityManager entityManager;  
@@ -187,7 +189,6 @@ public class DatabaseCleanup implements InitializingBean {
 	private static final String SET_REFERENTIAL_INTEGRITY_SQL_MESSAGE = "SET REFERENTIAL_INTEGRITY %s";  
 	private static final String TRUNCATE_SQL_MESSAGE = "TRUNCATE TABLE %s";  
 	private static final String ID_RESET_SQL_MESSAGE = "ALTER TABLE %s ALTER COLUMN ID RESTART WITH 1";  
-	private static final String UNDERSCORE = "_";
   
     @PersistenceContext  
     private EntityManager entityManager;  
@@ -248,6 +249,10 @@ public class ExampleTest {
 
 ## 결론
 
-지금으로서는 `Entity Manager` 를 통해 테스트를 격리하는 것이 최선의 방법으로 보인다.
+지금으로서는 데이터 삭제가 쉽고, 테이블이 추가되었을 때 sql 구문을 수정하지 않아도 되는 `Entity Manager` 를 통해 테스트를 격리하는 것이 최선의 방법으로 보인다.
 
 하지만, 추후에 이보다 더 좋은 방법을 발견하면, 면밀히 검토해보고 바꿀 의사가 충분하다고 생각한다.
+
+## 참고
+
+https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/
