@@ -40,8 +40,12 @@ Jenkins와 GitHub Actions가 고려 대상이었습니다.
    - 실제로 한 팀원이 EC2 t2g.micro에 젠킨스 CI/CD를 적용했다가, 메모리가 부족해 서버가 죽는 과거의 경험을 공유해주었습니다.
    - 때문에 적어도 CI 만큼은 GitHub Actions로 분리해 테스트 실행을 외부 서비스에 위임하기로 했습니다.
    - 하지만 그렇다면, 간결한 파이프라인을 위해 CI/CD를 모두 GitHub Actions로 통합하는 것이 좋다고 판단했습니다.
-   > 실제로 가동중인 상황에서 확인해본 결과, 전체 메모리의 최대 0.7%만을 사용함을 알 수 있었습니다.   
+   > EC2에서 `./gradlew build`를 수행해 직접 빌드 및 테스트를 할 경우 아래와 같이 총 26.2%의 사용량이 확인되지만,  
+   ![ec2-build-usage.png](.index_image/ec2-build-usage.png)
+   > 그 대신 Actions Runner가 가동하는 상황을 확인해본 결과, 전체 메모리의 최대 11.9%만을 사용함을 알 수 있었습니다.   
    ![actions-runner-usage.png](.index_image/actions-runner-usage.png)
+   
+    
 2. 쉽고 빠른 적용 
    - GitHub 레포지토리에서 바로 설정이 가능해 기존 개발 환경과 통합해 사용 가능합니다.
    - YAML 파일 작성만으로도 쉽고 빠른 적용이 가능합니다.
@@ -238,7 +242,7 @@ on:
 
   pull_request:
     branches: [ develop ]
-    types: [closed]
+    types: [ closed ]
     paths: frontend/**
 
 permissions:
