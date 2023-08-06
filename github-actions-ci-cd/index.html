@@ -267,17 +267,31 @@ Jenkins와 GitHub Actions가 고려 대상이었습니다.</p>
 <li>
 <p>하지만 그렇다면, 간결한 파이프라인을 위해 CI/CD를 모두 GitHub Actions로 통합하는 것이 좋다고 판단했습니다.</p>
 <blockquote>
-<p>실제로 가동중인 상황에서 확인해본 결과, 전체 메모리의 최대 0.7%만을 사용함을 알 수 있었습니다.<br>
+<p>EC2에서 <code class="language-text">./gradlew build</code>를 수행해 직접 빌드 및 테스트를 할 경우 아래와 같이 총 26.2%의 사용량이 확인되지만,<br>
 <figure class='gatsby-resp-image-figure' style='margin-bottom: 16px;'>
     <span class='gatsby-resp-image-wrapper' style='position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; '>
-      <a class='gatsby-resp-image-link' href='/static/0937a9f478cb18c06a40bb9bd81b4879/41396/actions-runner-usage.png' style='display: block' target='_blank' rel='noopener'>
-    <span class='gatsby-resp-image-background-image' style="padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+0lEQVR42h2Qy06DYBCFeQ2bWHXTCiQNoEESKpQIBFgRdyZ1wQLlfpE7AVa897H8q7nkzDdnhvJ9H23bwvM8EsdxxDAMaJoGcRyj73t0XYcsy5HnOYIgwDaTRhGavxLR7w/yJEaaJKRP8TwP27bBMAwMw4DrujBNE4qikJ6maXAcB+f3M2RZxuF4BHc6wRJf8GV+wFVkfKoyXp8PuN/vQbEsSwA0TUOSJAJXVZWAtnqD6LoOQRDIEo7jiPZNFGFbFi4XFZupp8cH7HZ3oJKb1WmaUJYlOWmeZ5Ivy4KqqlDXNTl7q9d1xaYPwxB5UZDXFLd4vX4jzTKkaYp/UEufDgzXJbEAAAAASUVORK5CYII='); background-size: cover; display: block;"></span>
-  <img class='gatsby-resp-image-image' alt='actions-runner-usage.png' title='' src='/static/0937a9f478cb18c06a40bb9bd81b4879/ca1dc/actions-runner-usage.png' srcset='/static/0937a9f478cb18c06a40bb9bd81b4879/e7570/actions-runner-usage.png 170w,
-/static/0937a9f478cb18c06a40bb9bd81b4879/f46e7/actions-runner-usage.png 340w,
-/static/0937a9f478cb18c06a40bb9bd81b4879/ca1dc/actions-runner-usage.png 680w,
-/static/0937a9f478cb18c06a40bb9bd81b4879/02d09/actions-runner-usage.png 1020w,
-/static/0937a9f478cb18c06a40bb9bd81b4879/9d567/actions-runner-usage.png 1360w,
-/static/0937a9f478cb18c06a40bb9bd81b4879/41396/actions-runner-usage.png 1610w' sizes='(max-width: 680px) 100vw, 680px' style='width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;' loading='lazy' decoding='async'>
+      <a class='gatsby-resp-image-link' href='/static/3e3b041ba86d85b4ba5b6adb3ab991ab/ca756/ec2-build-usage.png' style='display: block' target='_blank' rel='noopener'>
+    <span class='gatsby-resp-image-background-image' style="padding-bottom: 39.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABoElEQVR42k2R2U7CUBCG+xJIvGWnLWWpUNqytGUTmlCgxHfwQhI3BKNeCHqhRo0RfdzfmRMgXvw5kzNz/vlmjvS9vMb7/BybuwU+by6xuV/i5+EWvySOP+ju63aOl/MZvrlmcYXns1O8Xszw9rTG43qN9Var1QqSU6vhJJxAz2uwq4bQ0B+gYVvouC56rRYMXUfdMtFqNhGOArRdB1o2i8NoFNF/ihxEIOn6EYJgBKNahUMGHhkMg2AfsxqNJlzXw2DgYxKGGE8mMC0LqXQasiwjS+Y7SfF4HJ1OB2lKNomgXC5DVRQopHw+j1KpBNuuoV6v47jXw3Q6Rb/fJ/OBMEgkEkKpVArJZBISBy7RZDIZ1Gh8wzCQy+WgqioKhYIwrVQq4p4bBkTf7XZFzM3YVNM08V4YyrKCdrstEkzBhFygbA1LtL+qacKiET3Pw3g8FoZM6DgO0dswKb83ZBIegU8mZZNisSgomYDJeIeO44o6HrlHo4e0SwbhJlzHq9sSyiKhKKp4zHQ85o5QZ0L6sB2h7/uCkE+uj8ViYn+7Hf4BLR8XxB5LO8UAAAAASUVORK5CYII='); background-size: cover; display: block;"></span>
+  <img class='gatsby-resp-image-image' alt='ec2-build-usage.png' title='' src='/static/3e3b041ba86d85b4ba5b6adb3ab991ab/ca1dc/ec2-build-usage.png' srcset='/static/3e3b041ba86d85b4ba5b6adb3ab991ab/e7570/ec2-build-usage.png 170w,
+/static/3e3b041ba86d85b4ba5b6adb3ab991ab/f46e7/ec2-build-usage.png 340w,
+/static/3e3b041ba86d85b4ba5b6adb3ab991ab/ca1dc/ec2-build-usage.png 680w,
+/static/3e3b041ba86d85b4ba5b6adb3ab991ab/02d09/ec2-build-usage.png 1020w,
+/static/3e3b041ba86d85b4ba5b6adb3ab991ab/ca756/ec2-build-usage.png 1296w' sizes='(max-width: 680px) 100vw, 680px' style='width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;' loading='lazy' decoding='async'>
+  </a>
+    </span>
+    <figcaption class='gatsby-resp-image-figcaption'>ec2-build-usage.png</figcaption>
+  </figure>
+그 대신 Actions Runner가 가동하는 상황을 확인해본 결과, 전체 메모리의 최대 11.9%만을 사용함을 알 수 있었습니다.<br>
+<figure class='gatsby-resp-image-figure' style='margin-bottom: 16px;'>
+    <span class='gatsby-resp-image-wrapper' style='position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; '>
+      <a class='gatsby-resp-image-link' href='/static/da18fd4f83fb28e329badab6f664e0ab/41396/actions-runner-usage.png' style='display: block' target='_blank' rel='noopener'>
+    <span class='gatsby-resp-image-background-image' style="padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAABEklEQVR42h2QXWuCABSG/RvrojUI+hBGGUQt01omZjS6aBeDxjZYNTO/yiw3lS7638+ki8N7Hng4HF5htVoTRRGbr0+S6MjlN+YSx/wdQ/b2lux8Ij1FhK7D0XNxfzbYq2/8rcV5H+Bs1ux323xs1vktodlsMp1MkOtVFuMRH/MZr7rGTJHp1ivMhwpvpsG038XsdWhXyvQfRbR2i4U+unkvqkyvWua+WEQQRRFd16nXajx1OpgTg4Gq8jwc0s1Z7vUYaxotSUJVFKRG4+Z22m1Mw2A4UJHypx5KJe4KBYTdbkeSJARBgOd5pGmGn+9plnE4hIRhyOkc3/h6vWLnvmVZ+L5PnFfj5blcvuO4Lo7j8A8rfZ//YZfDmwAAAABJRU5ErkJggg=='); background-size: cover; display: block;"></span>
+  <img class='gatsby-resp-image-image' alt='actions-runner-usage.png' title='' src='/static/da18fd4f83fb28e329badab6f664e0ab/ca1dc/actions-runner-usage.png' srcset='/static/da18fd4f83fb28e329badab6f664e0ab/e7570/actions-runner-usage.png 170w,
+/static/da18fd4f83fb28e329badab6f664e0ab/f46e7/actions-runner-usage.png 340w,
+/static/da18fd4f83fb28e329badab6f664e0ab/ca1dc/actions-runner-usage.png 680w,
+/static/da18fd4f83fb28e329badab6f664e0ab/02d09/actions-runner-usage.png 1020w,
+/static/da18fd4f83fb28e329badab6f664e0ab/9d567/actions-runner-usage.png 1360w,
+/static/da18fd4f83fb28e329badab6f664e0ab/41396/actions-runner-usage.png 1610w' sizes='(max-width: 680px) 100vw, 680px' style='width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;' loading='lazy' decoding='async'>
   </a>
     </span>
     <figcaption class='gatsby-resp-image-figcaption'>actions-runner-usage.png</figcaption>
@@ -297,14 +311,14 @@ Jenkins와 GitHub Actions가 고려 대상이었습니다.</p>
 </ol>
 <h2>CI/CD 파이프라인</h2>
 <p><span class='gatsby-resp-image-wrapper' style='position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;'>
-      <a class='gatsby-resp-image-link' href='/static/4918353acf70cce1eaea143581152f08/aaf92/cicd-pipeline.jpg' style='display: block' target='_blank' rel='noopener'>
-    <span class='gatsby-resp-image-background-image' style="padding-bottom: 56.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAQAF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3ZQmP//EABkQAAEFAAAAAAAAAAAAAAAAAAEAEBExQf/aAAgBAQABBQLQZQp//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPwE//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPwE//8QAFBABAAAAAAAAAAAAAAAAAAAAIP/aAAgBAQAGPwJf/8QAGxAAAgMAAwAAAAAAAAAAAAAAAREAITEQUcH/2gAIAQEAAT8hylexIFEPuE2bg08//9oADAMBAAIAAwAAABBwz//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QP//EABwQAQEAAgIDAAAAAAAAAAAAAAERACEQMUFRcf/aAAgBAQABPxDRI2Ygds6C2wRPvrCAQa3CCnlrwAECGf/Z'); background-size: cover; display: block;"></span>
-  <img class='gatsby-resp-image-image' alt='cicd pipeline' title='' src='/static/4918353acf70cce1eaea143581152f08/a22ce/cicd-pipeline.jpg' srcset='/static/4918353acf70cce1eaea143581152f08/0b705/cicd-pipeline.jpg 170w,
-/static/4918353acf70cce1eaea143581152f08/31389/cicd-pipeline.jpg 340w,
-/static/4918353acf70cce1eaea143581152f08/a22ce/cicd-pipeline.jpg 680w,
-/static/4918353acf70cce1eaea143581152f08/29373/cicd-pipeline.jpg 1020w,
-/static/4918353acf70cce1eaea143581152f08/232dc/cicd-pipeline.jpg 1360w,
-/static/4918353acf70cce1eaea143581152f08/aaf92/cicd-pipeline.jpg 1920w' sizes='(max-width: 680px) 100vw, 680px' style='width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;' loading='lazy' decoding='async'>
+      <a class='gatsby-resp-image-link' href='/static/7a8df2a639dab8236f0b2622d706c43a/aaf92/cicd-pipeline.jpg' style='display: block' target='_blank' rel='noopener'>
+    <span class='gatsby-resp-image-background-image' style="padding-bottom: 56.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAALABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAQAF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB3ZQmP//EABgQAAIDAAAAAAAAAAAAAAAAAAABEDFB/9oACAEBAAEFAtTFU//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABQQAQAAAAAAAAAAAAAAAAAAACD/2gAIAQEABj8CX//EABoQAAIDAQEAAAAAAAAAAAAAAAERACExEMH/2gAIAQEAAT8hylexoBRDhNm4NPf/2gAMAwEAAgADAAAAEHDP/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPxA//8QAGxABAQEAAgMAAAAAAAAAAAAAAREAECExQXH/2gAIAQEAAT8Q6JHZiB5YJ2NiRPuIBBrXEFPbXgAIEN//2Q=='); background-size: cover; display: block;"></span>
+  <img class='gatsby-resp-image-image' alt='cicd pipeline' title='' src='/static/7a8df2a639dab8236f0b2622d706c43a/a22ce/cicd-pipeline.jpg' srcset='/static/7a8df2a639dab8236f0b2622d706c43a/0b705/cicd-pipeline.jpg 170w,
+/static/7a8df2a639dab8236f0b2622d706c43a/31389/cicd-pipeline.jpg 340w,
+/static/7a8df2a639dab8236f0b2622d706c43a/a22ce/cicd-pipeline.jpg 680w,
+/static/7a8df2a639dab8236f0b2622d706c43a/29373/cicd-pipeline.jpg 1020w,
+/static/7a8df2a639dab8236f0b2622d706c43a/232dc/cicd-pipeline.jpg 1360w,
+/static/7a8df2a639dab8236f0b2622d706c43a/aaf92/cicd-pipeline.jpg 1920w' sizes='(max-width: 680px) 100vw, 680px' style='width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;' loading='lazy' decoding='async'>
   </a>
     </span>
 CI/CD 파이프라인은 다음과 같습니다.  </p>
@@ -507,7 +521,7 @@ CI/CD 파이프라인은 다음과 같습니다.  </p>
 
   <span class="token key atrule">pull_request</span><span class="token punctuation">:</span>
     <span class="token key atrule">branches</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> develop <span class="token punctuation">]</span>
-    <span class="token key atrule">types</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>closed<span class="token punctuation">]</span>
+    <span class="token key atrule">types</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> closed <span class="token punctuation">]</span>
     <span class="token key atrule">paths</span><span class="token punctuation">:</span> frontend/<span class="token important">**</span>
 
 <span class="token key atrule">permissions</span><span class="token punctuation">:</span>
