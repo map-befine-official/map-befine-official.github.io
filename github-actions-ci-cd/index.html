@@ -512,7 +512,34 @@ CI/CD 파이프라인은 다음과 같습니다.  </p>
           <span class="token key atrule">SLACK_WEBHOOK_URL</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span><span class="token punctuation">{</span> secrets.SLACK_WEBHOOK_URL <span class="token punctuation">}</span><span class="token punctuation">}</span>
         <span class="token key atrule">if</span><span class="token punctuation">:</span> always()</code></pre></div>
 <h3>프론트엔드 CI workflow</h3>
-<p>프론트엔드 CI는 추후 테스트와 함께 적용 예정입니다.  </p>
+<div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name</span><span class="token punctuation">:</span> Frontend CI For Test Validation
+<span class="token comment"># 어떤 이벤트가 발생하면 실행할지 결정</span>
+<span class="token key atrule">on</span><span class="token punctuation">:</span>
+  <span class="token comment">#pull request open과 reopen 시 실행한다.</span>
+  <span class="token key atrule">pull_request</span><span class="token punctuation">:</span>
+    <span class="token key atrule">branches</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>main<span class="token punctuation">,</span> develop<span class="token punctuation">]</span>
+    <span class="token key atrule">paths</span><span class="token punctuation">:</span> frontend/<span class="token important">**</span>
+<span class="token key atrule">defaults</span><span class="token punctuation">:</span>
+  <span class="token key atrule">run</span><span class="token punctuation">:</span>
+    <span class="token key atrule">working-directory</span><span class="token punctuation">:</span> ./frontend
+<span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token key atrule">jest</span><span class="token punctuation">:</span>
+    <span class="token key atrule">runs-on</span><span class="token punctuation">:</span> ubuntu<span class="token punctuation">-</span><span class="token number">22.04</span>
+
+    <span class="token key atrule">steps</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Checkout repository
+        <span class="token key atrule">uses</span><span class="token punctuation">:</span> actions/checkout@v2
+
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Setup Node.js
+        <span class="token key atrule">uses</span><span class="token punctuation">:</span> actions/setup<span class="token punctuation">-</span>node@v2
+        <span class="token key atrule">with</span><span class="token punctuation">:</span>
+          <span class="token key atrule">node-version</span><span class="token punctuation">:</span> <span class="token string">"18"</span>
+
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Install node modules
+        <span class="token key atrule">run</span><span class="token punctuation">:</span> npm install
+
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Run Jest test
+        <span class="token key atrule">run</span><span class="token punctuation">:</span> npm run test</code></pre></div>
 <h3>프론트엔드 CD workflow</h3>
 <div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name</span><span class="token punctuation">:</span> Frontend develop CD
 
