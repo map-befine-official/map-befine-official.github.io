@@ -2,7 +2,7 @@
 title: "GitHub Actions로 CI/CD 구축하기"
 description: "GitHub Actions를 활용한 CI/CD 적용 이유 및 방법에 대해 정리하였습니다."
 date: "2023-07-29"
-update: "2023-07-29"
+update: "2023-08-09"
 tags:
 - 인프라
 ---
@@ -231,7 +231,36 @@ jobs:
 ```
 
 ### 프론트엔드 CI workflow
-프론트엔드 CI는 추후 테스트와 함께 적용 예정입니다.  
+```yaml
+name: Frontend CI For Test Validation
+# 어떤 이벤트가 발생하면 실행할지 결정
+on:
+  #pull request open과 reopen 시 실행한다.
+  pull_request:
+    branches: [main, develop]
+    paths: frontend/**
+defaults:
+  run:
+    working-directory: ./frontend
+jobs:
+  jest:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install node modules
+        run: npm install
+
+      - name: Run Jest test
+        run: npm run test
+```
 
 ### 프론트엔드 CD workflow
 ```yaml
