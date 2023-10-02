@@ -6,7 +6,7 @@ update: "2023-10-02"
 tags:
 - Spring Data JPA
 - Test
-- @Modifying
+- "@Modifying"
 ---
 
 > 이 글은 우테코 괜찮을지도의 `쥬니`가 작성하였습니다.
