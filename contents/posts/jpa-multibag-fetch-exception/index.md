@@ -4,8 +4,9 @@ description: "JPA Fetch join 중 마주한 MultipleBagFetchException 예외의 �
 date: 2023-10-04
 update: 2023-10-04
 tags:
-- JPA
+- Spring Data JPA
 - Hibernate
+- JPQL
 - 트러블슈팅
 ---
 
