@@ -1,6 +1,6 @@
 ---
-title: "Fetch join 사용 시 MultiBagFetchException의 발생 이유와 해결 방법"
-description: "JPA Fetch join 중 마주한 MultiBagFetchException 예외의 발생 이유와 해결 방법을 정리한 글입니다."
+title: "Fetch join 사용 시 MultipleBagFetchException의 발생 이유와 해결 방법"
+description: "JPA Fetch join 중 마주한 MultipleBagFetchException 예외의 발생 이유와 해결 방법을 정리한 글입니다."
 date: 2023-10-04
 update: 2023-10-04
 tags:
@@ -58,14 +58,14 @@ org.hibernate.loader.MultipleBagFetchException: cannot simultaneously fetch mult
 List<Topic> findAll();
 ```
 
-## MultiBagFetchException의 발생 이유
+## MultipleBagFetchException의 발생 이유
 간단하게 이야기하면 **`OneToMany` 관계를 1개보다 더 많이 Fetch join** 하려고 했기 때문에 발생한 문제입니다.  
 "permissons"와 "bookmarks"를 동시에 Fetch join할 수 없습니다.
 
 ### Fetch join과 카테시안 곱
 Fetch join은 `*ToOne` 관계에는 개수 제한이 없지만, `*ToMany` 관계를 1개만 사용할 수 있습니다.  
 fech join을 여러 개의 컬렉션에 적용한다면, 카테시안 곱에 의해 중복 데이터가 발생하기 때문입니다.  
-Hibernate은 이에 대해 `MultiBagFetchException` 예외를 던져 해당 상황 자체를 막습니다.  
+Hibernate은 이에 대해 `MultipleBagFetchException` 예외를 던져 해당 상황 자체를 막습니다.  
 
 물론 하나의 `OneToMany`를 Fetch join 해도 join 대상인 엔티티 기준으로는 중복이 발생합니다.  
 하지만 이에 대해서는 JPQL에서 지원하는 distinct를 사용해 엔티티의 중복을 제거할 수 있습니다.  
