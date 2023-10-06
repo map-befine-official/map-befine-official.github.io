@@ -205,7 +205,7 @@ public class Permission extends BaseTimeEntity {
 }
 ```
 
-- ManyToOne 을 테스트 하기 위한 테스트 코드 (네이밍은 봐주세영!)
+- ManyToOne 을 테스트 하기 위한 테스트 코드
 
 ```java
 @ServiceTest  
@@ -418,7 +418,7 @@ Hibernate:
         t1_0.id=?
 ```
 
-여윽시 동일하다.
+역시 동일하다.
 
 ### ManyToOne 테스트를 통해 확실하게 유추할 수 있는 것
 
