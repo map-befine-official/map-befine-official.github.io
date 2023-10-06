@@ -10,9 +10,9 @@ tags:
 
 > 이 글은 우테코 괜찮을지도의 `매튜`가 작성하였습니다.
 
-### 배경
+## 배경
 
-#### 쿼리 개선... 필요할지도?
+### 쿼리 개선... 필요할지도?
 
 9월 말, 추석을 앞두고 사용자 유치 계획 실행을 앞두고 있었다.
 
@@ -28,7 +28,7 @@ tags:
 
 그 중에서 `N + 1` 문제를 해결하는 과정 중에 해당 글을 작성하게 된 문제가 발생하였다.
 
-#### 문제 상황
+### 문제 상황
 
 유저가 `지도` 목록을 조회하려는 경우 비정상적으로 쿼리가 많이나갔다.
 
@@ -36,7 +36,7 @@ tags:
 
 우리는 해당 `N + 1` 문제를 해결하기 위해서 `fetch join` 을 사용했다.
 
-#### N + 1 을 해결해보자!
+### N + 1 을 해결해보자!
 
 - Topic Entity 구조 (`지도 == Topic`)
 ```java
@@ -123,7 +123,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
 도대체 왜 ?? ㅠㅠㅠ
 
-#### 해결했는데 이유를 모르겠어
+### 해결했는데 이유를 모르겠어
 
 다른 문제들도 많은데, 해당 문제까지 발생하여 몇 시간 동안 골머리를 앓았다.
 
@@ -170,9 +170,9 @@ List<Topic> findAll();
 
 차근차근 알아가보자!
 
-### ManyToOne 테스트
+## ManyToOne 테스트
 
-#### 테스트를 통해서 생각을 굳혀보자!
+### 테스트를 통해서 생각을 굳혀보자!
 
 일단 이전 상황들로 미루어 보았을 때, `Eager` 와 `Lazy` 는 단순 `select 시기`를 `결정`하는 것 같다.
 
@@ -254,7 +254,7 @@ class TestClass {
 
 당연히 추가적인 `select` 쿼리가 날아가겠지? ㅎㅎ
 
-#### 예상과 다른 결과
+### 예상과 다른 결과
 
 ```sql
 Hibernate: 
@@ -289,7 +289,7 @@ Hibernate:
 
 # 이전에는 목록 조회(findAll()), 이번에는 단건 조회(findById())이다.
 
-#### 호다닥 findAll 로 테스트
+### 호다닥 findAll 로 테스트
 
 ```java
 @Test  
@@ -340,7 +340,7 @@ Hibernate:
 
 `Lazy` 로 더 테스트를 진행해서 가설을 사실로 굳혀보자!
 
-#### Lazy 테스트
+### Lazy 테스트
 
 먼저 `findById`로 테스트를 진행해보자.
 
@@ -420,15 +420,15 @@ Hibernate:
 
 여윽시 동일하다.
 
-#### ManyToOne 테스트를 통해 확실하게 유추할 수 있는 것
+### ManyToOne 테스트를 통해 확실하게 유추할 수 있는 것
 
 `findAll` 과 같은 목록 조회는 `Eager`, `Lazy` 가 정말 `select 시기`만을 결정하지만, `findById` 과 같은 단건 조회는 `Eager` 로 설정하게 되면, `fetchType` 이 `select 시기 결정`을 넘어 `join` 여부까지 결정할 수 있는 것이다. (최적화)
 
 결과야 뻔하긴 하지만, 남은 `OneToMany` 테스트들도 진행해서 위 사실을 더욱 더 굳혀보자.
 
-### OneToMany
+## OneToMany
 
-#### 테스트 준비
+### 테스트 준비
 
 `ManyToOne` 테스트와 마찬가지로 `OneToMany` 테스트를 진행할 `대상 Entity` 와 `Test 코드`를 짜보자!
 
@@ -468,7 +468,7 @@ void memberOneToManyFindAll() {
 }
 ```
 
-#### Eager 에 대해서 먼저 테스트 해보자!
+### Eager 에 대해서 먼저 테스트 해보자!
 
 - findById 로 테스트
 ```sql
@@ -506,7 +506,7 @@ Hibernate:
 
 왜 ? 지금까지 계속보았듯 `findAll` 과 같은 `목록 조회`에서는 `Eager`, `Lazy` 가 `select 시기`만을 결정하니까
 
-#### Lazy 도 테스트 해보자.
+### Lazy 도 테스트 해보자.
 
 정말 뻔하니 그냥 별다른 코멘트 없이 테스트 결과만을 나열하겠다.
 
@@ -543,7 +543,7 @@ Hibernate:
 
 당연히 조회하지 않는다면 더 이상 `select` 쿼리를 발생시키지 않는다.
 
-### 최종적인 결론
+## 최종적인 결론
 
 - `findById` 는 `FetchType` 이 `Eager` 라면 `join` 을 해서 가져와준다 (최적화를 알아서 해주는 것)
 - `findAll` 은 `findById` 와 다르게 `fetch type` 이 `Eager` 인지 `Lazy` 인지에 따라 해당 데이터를 가져오기 위한 `select 쿼리 발생 시기`만을 결정한다. (즉, `fetch type` 으로 인해 `join 여부`가 결정되지 않음)
