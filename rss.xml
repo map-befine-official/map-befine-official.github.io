@@ -1,4 +1,430 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 06 Oct 2023 07:44:36 GMT</lastBuildDate><item><title><![CDATA[@Modifying 어노테이션의 옵션이 정상 동작하지 않는 문제]]></title><description><![CDATA[이 글은 우테코 괜찮을지도의 가 작성하였습니다. 배경 괜찮을지도 서비스에서는 테스트를  방식으로 수행하고 있습니다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 06 Oct 2023 07:48:47 GMT</lastBuildDate><item><title><![CDATA[FetchType.EAGER, FetchType.LAZY 에 대해서 알아보자!]]></title><description><![CDATA[이 글은 우테코 괜찮을지도의 가 작성하였습니다. 배경 쿼리 개선... 필요할지도?…]]></description><link>https://map-befine-official.github.io/trouble-shooting-fetch-type/</link><guid isPermaLink="false">https://map-befine-official.github.io/trouble-shooting-fetch-type/</guid><pubDate>Wed, 04 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 괜찮을지도의 &lt;code class=&quot;language-text&quot;&gt;매튜&lt;/code&gt;가 작성하였습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;배경&lt;/h2&gt;
+&lt;h3&gt;쿼리 개선... 필요할지도?&lt;/h3&gt;
+&lt;p&gt;9월 말, 추석을 앞두고 사용자 유치 계획 실행을 앞두고 있었다.&lt;/p&gt;
+&lt;p&gt;우리는 행복회로를 돌리며, 많은 사용자들이 서비스에 들어올 것이라고 생각했고, 사용자들에게 좋은 경험을 선사하고 싶었다.&lt;/p&gt;
+&lt;p&gt;하지만, 문제가 있었다.&lt;/p&gt;
+&lt;p&gt;많은 사용자가 들어옴에 따라 평소보다 많은 트래픽이 발생할 것이고, 조금 더 좋은 경험을 제공하기 위해 추가한 지도와 핀으로 인해 데이터는 방대해졌다. &lt;/p&gt;
+&lt;p&gt;자칫하면 사용자에게 좋지 않은 경험을 선사할 수 있다는 생각에 성능 개선을 목표로 삼았다.&lt;/p&gt;
+&lt;p&gt;때문에 우리는 현재 발생하고 있는 &lt;code class=&quot;language-text&quot;&gt;N + 1&lt;/code&gt; 문제를 해결하고, &lt;code class=&quot;language-text&quot;&gt;인덱스&lt;/code&gt;를 활용하여 빠른 성능 개선을 계획했다.&lt;/p&gt;
+&lt;p&gt;그 중에서 &lt;code class=&quot;language-text&quot;&gt;N + 1&lt;/code&gt; 문제를 해결하는 과정 중에 해당 글을 작성하게 된 문제가 발생하였다.&lt;/p&gt;
+&lt;h3&gt;문제 상황&lt;/h3&gt;
+&lt;p&gt;유저가 &lt;code class=&quot;language-text&quot;&gt;지도&lt;/code&gt; 목록을 조회하려는 경우 비정상적으로 쿼리가 많이나갔다.&lt;/p&gt;
+&lt;p&gt;쉽게 예상할 수 있듯 당연히 &lt;code class=&quot;language-text&quot;&gt;N + 1&lt;/code&gt; 문제였다.&lt;/p&gt;
+&lt;p&gt;우리는 해당 &lt;code class=&quot;language-text&quot;&gt;N + 1&lt;/code&gt; 문제를 해결하기 위해서 &lt;code class=&quot;language-text&quot;&gt;fetch join&lt;/code&gt; 을 사용했다.&lt;/p&gt;
+&lt;h3&gt;N + 1 을 해결해보자!&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Topic Entity 구조 (&lt;code class=&quot;language-text&quot;&gt;지도 == Topic&lt;/code&gt;)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Entity&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@NoArgsConstructor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;access &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;PROTECTED&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Getter&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Topic&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BaseTimeEntity&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Id&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@GeneratedValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;strategy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;GenerationType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;IDENTITY&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 생략
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@ManyToOne&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@JoinColumn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;member_id&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; creator&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mappedBy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; permissions &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mappedBy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; cascade &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CascadeType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;PERSIST&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Pin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; pins &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mappedBy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; cascade &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CascadeType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;PERSIST&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; orphanRemoval &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Bookmark&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; bookmarks &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;nullable &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@ColumnDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; pinCount &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;nullable &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@ColumnDefault&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; bookmarkCount &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 생략&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;}&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;- Topic Repository 
+```java
+@Repository  
+public interface TopicRepository extends JpaRepository&amp;lt;Topic, Long&gt; {  
+  
+    @EntityGraph(attributePaths = {&quot;permissions&quot;})  
+    List&amp;lt;Topic&gt; findAll();
+
+	... 생략
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;앞선 &lt;code class=&quot;language-text&quot;&gt;Entity&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Repository&lt;/code&gt; 는 &lt;code class=&quot;language-text&quot;&gt;지도&lt;/code&gt; 목록을 조회할 때 사용된 &lt;code class=&quot;language-text&quot;&gt;Entity&lt;/code&gt; 및 &lt;code class=&quot;language-text&quot;&gt;Repository&lt;/code&gt; 이다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;code class=&quot;language-text&quot;&gt;Topic&lt;/code&gt; 에 필요한 정보는 아래와 같다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Topic Response&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;id&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;name&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;토픽 이름&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;image&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;토픽 이미지 링크&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;creator&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;토픽을 만든자&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;pinCount&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;bookmarkCount&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;  
+&lt;span class=&quot;token property&quot;&gt;&quot;updatedAt&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;2023-10-02T18:00:55.95188832&quot;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;여기서 사용자에게 &lt;code class=&quot;language-text&quot;&gt;Topic&lt;/code&gt; 목록을 제공하기 위해 부수적으로 필요한 &lt;code class=&quot;language-text&quot;&gt;Entity&lt;/code&gt; 는 &lt;code class=&quot;language-text&quot;&gt;Member&lt;/code&gt; , &lt;code class=&quot;language-text&quot;&gt;Permission&lt;/code&gt; 이었다.&lt;/p&gt;
+&lt;p&gt;위에서 볼 수 있듯, &lt;code class=&quot;language-text&quot;&gt;Member&lt;/code&gt; 는 &lt;code class=&quot;language-text&quot;&gt;@ManyToOne 기본 fetch 설정&lt;/code&gt;으로 인해 &lt;code class=&quot;language-text&quot;&gt;FetchType.EAGER&lt;/code&gt; 로 설정되고, &lt;code class=&quot;language-text&quot;&gt;Permission&lt;/code&gt; 은 &lt;code class=&quot;language-text&quot;&gt;@OneToMany 기본 fetch 설정&lt;/code&gt; 인 &lt;code class=&quot;language-text&quot;&gt;FetchType.LAZY&lt;/code&gt; 이지만, &lt;code class=&quot;language-text&quot;&gt;@EntityGraph&lt;/code&gt; 를 통해서 &lt;code class=&quot;language-text&quot;&gt;fetch join&lt;/code&gt; 을 해주었기 때문에 당연히 쿼리는 한번만 나갈 줄 알았다.&lt;/p&gt;
+&lt;p&gt;하지만, 결과는....&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 데이터 10만개를 기준으로 진행되었음
+[http-nio-8080-exec-2] 16496 INFO  com.mapbefine.mapbefine.common.filter.LatencyLoggingFilter - Latency : 4.649s, Query count : 8, Request URI : /topics&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같았고, 우리는 멘붕이 올 수 밖에 없었다.&lt;/p&gt;
+&lt;p&gt;우리 예상대로라면 분명히 &lt;code class=&quot;language-text&quot;&gt;Query Count&lt;/code&gt; 가 &lt;code class=&quot;language-text&quot;&gt;1&lt;/code&gt;이어야 하는데??&lt;/p&gt;
+&lt;p&gt;도대체 왜 ?? ㅠㅠㅠ&lt;/p&gt;
+&lt;h3&gt;해결했는데 이유를 모르겠어&lt;/h3&gt;
+&lt;p&gt;다른 문제들도 많은데, 해당 문제까지 발생하여 몇 시간 동안 골머리를 앓았다.&lt;/p&gt;
+&lt;p&gt;그러다 조금의 시간이 흘렀고, 마음을 가다듬고 천천히 쿼리를 뜯어보기 시작했고, 원인을 찾을 수 있었다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        topic t1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        permission p1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;p1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;topic_id
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        member m1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?
+
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;7&lt;/span&gt; 번을 member 를 찾아옴&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;우리는 &lt;code class=&quot;language-text&quot;&gt;@ManyToOne&lt;/code&gt; 의 &lt;code class=&quot;language-text&quot;&gt;기본 fetch 설정&lt;/code&gt;인 &lt;code class=&quot;language-text&quot;&gt;FetchType.EAGER&lt;/code&gt; 로 인해 &lt;code class=&quot;language-text&quot;&gt;Member&lt;/code&gt; 를 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 을 통해 가져올 것이라고 생각했지만, 실상은 &lt;code class=&quot;language-text&quot;&gt;Topic&lt;/code&gt; 을 가져올 때 &lt;code class=&quot;language-text&quot;&gt;permission&lt;/code&gt; 은 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt;을 잘해서 가져오지만, &lt;code class=&quot;language-text&quot;&gt;member&lt;/code&gt; 는 &lt;code class=&quot;language-text&quot;&gt;select 쿼리&lt;/code&gt;를 통해 따로 가져오고 있었다.&lt;/p&gt;
+&lt;p&gt;이로 인해서 &lt;code class=&quot;language-text&quot;&gt;Query Count&lt;/code&gt; 가 &lt;code class=&quot;language-text&quot;&gt;1&lt;/code&gt;이 아니었던 것이었다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@EntityGraph&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;attributePaths &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;creator&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;permissions&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Topic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;해당 문제를 해결하기 위해, 위와 같이 &lt;code class=&quot;language-text&quot;&gt;attributePaths&lt;/code&gt; 에 &lt;code class=&quot;language-text&quot;&gt;creator&lt;/code&gt; 를 추가해주었더니&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;[http-nio-8080-exec-5] 16826 INFO  com.mapbefine.mapbefine.common.filter.LatencyLoggingFilter - Latency : 5.941s, Query count : 1, Request URI : /topics&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;드디어 &lt;code class=&quot;language-text&quot;&gt;Query Count&lt;/code&gt; 를 &lt;code class=&quot;language-text&quot;&gt;1&lt;/code&gt;로 만들 수 있었다.&lt;/p&gt;
+&lt;p&gt;도대체 왜 그런걸까???&lt;/p&gt;
+&lt;p&gt;차근차근 알아가보자!&lt;/p&gt;
+&lt;h2&gt;ManyToOne 테스트&lt;/h2&gt;
+&lt;h3&gt;테스트를 통해서 생각을 굳혀보자!&lt;/h3&gt;
+&lt;p&gt;일단 이전 상황들로 미루어 보았을 때, &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 와 &lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 는 단순 &lt;code class=&quot;language-text&quot;&gt;select 시기&lt;/code&gt;를 &lt;code class=&quot;language-text&quot;&gt;결정&lt;/code&gt;하는 것 같다.&lt;/p&gt;
+&lt;p&gt;그렇기 때문에, &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 로 설정하든 &lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 로 설정하든, 따로 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리를 통해서 가져오는 것이다.&lt;/p&gt;
+&lt;p&gt;이를 증명하기 위해 몇 가지 테스트를 진행해보자.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;@ManyToOne&lt;/code&gt; 을 진행하기 위해 &lt;code class=&quot;language-text&quot;&gt;대상 Entity&lt;/code&gt; 를 정하고 &lt;code class=&quot;language-text&quot;&gt;Test&lt;/code&gt; 하기 위한 &lt;code class=&quot;language-text&quot;&gt;테스트 코드&lt;/code&gt;를 짜보자!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Permission (@ManyToOne 컬럼밖에 없어서 딱 테스트하기 좋은 Entity Class 라고 판단)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Entity&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@NoArgsConstructor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;access &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;PROTECTED&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Getter&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BaseTimeEntity&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Id&lt;/span&gt;  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@GeneratedValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;strategy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;GenerationType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;IDENTITY&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@ManyToOne&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// 여기서 Eager or Lazy 로 진행할 것 &lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@JoinColumn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;topic_id&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; nullable &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Topic&lt;/span&gt; topic&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@ManyToOne&lt;/span&gt;  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@JoinColumn&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;member_id&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; nullable &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;ManyToOne 을 테스트 하기 위한 테스트 코드&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@ServiceTest&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TestClass&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Autowired&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TopicRepository&lt;/span&gt; topicRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Autowired&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;MemberRepository&lt;/span&gt; memberRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Autowired&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PermissionRepository&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Autowired&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TestEntityManager&lt;/span&gt; testEntityManager&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Topic&lt;/span&gt; topic&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt; permission&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@BeforeEach&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;token comment&quot;&gt;// 멤버를 저장한다.  &lt;/span&gt;
+        member &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; memberRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;MemberFixture&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;member&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;member@naver.com&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Role&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;USER&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token comment&quot;&gt;// 토픽을 저장한다.  &lt;/span&gt;
+        topic &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; topicRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;TopicFixture&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createPublicAndAllMembersTopic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token comment&quot;&gt;// 권한을 저장한다.  &lt;/span&gt;
+        permission &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createPermissionAssociatedWithTopicAndMember&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;topic&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+        &lt;span class=&quot;token comment&quot;&gt;// 영속성 컨텍스트 초기화 (초기화 안하면 findById 때 쿼리가 안 날라감)&lt;/span&gt;
+        testEntityManager&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;  
+  
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Test&lt;/span&gt;  
+    &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;permissionManyToOneFindById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt; permissionByFindById &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permission&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+          
+        &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permissionByFindById&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getTopic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;topic&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+        &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permissionByFindById&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getMember&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 테스트 코드를 짜고, &lt;code class=&quot;language-text&quot;&gt;@ManyToOne fetchType&lt;/code&gt; 은 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; (기본 설정) 로 설정하고 테스트를 진행했다.&lt;/p&gt;
+&lt;p&gt;당연히 추가적인 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리가 날아가겠지? ㅎㅎ&lt;/p&gt;
+&lt;h3&gt;예상과 다른 결과&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        permission p1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        member m1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;p1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+    &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        topic t1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;p1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;topic_id 
+    &lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        member c1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        p1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;아니 도대체 왜 ???&lt;/p&gt;
+&lt;p&gt;예상대로라면 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리가 나가야 하는데...&lt;/p&gt;
+&lt;p&gt;이해가 되지 않는다.&lt;/p&gt;
+&lt;p&gt;왜 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 했다가 지 마음대로 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 해서 오는지 갈대같은 &lt;code class=&quot;language-text&quot;&gt;JPA&lt;/code&gt; 의 마음을 알 수가 없다.&lt;/p&gt;
+&lt;p&gt;이 결과를 보고 이전과 다른게 뭐지... 하면서 곰곰히 생각해보았다.&lt;/p&gt;
+&lt;p&gt;이 때 내가 발견한 차이점은 단 하나였다.&lt;/p&gt;
+&lt;h1&gt;이전에는 목록 조회(findAll()), 이번에는 단건 조회(findById())이다.&lt;/h1&gt;
+&lt;h3&gt;호다닥 findAll 로 테스트&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Test&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;permissionManyToOneFindAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; permission &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 테스트를 실행해보았다.&lt;/p&gt;
+&lt;p&gt;결과는??&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;insert&lt;/span&gt; 
+    &lt;span class=&quot;token keyword&quot;&gt;into&lt;/span&gt;
+        permission
+        &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;created_at&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;member_id&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;topic_id&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;updated_at&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; 
+    &lt;span class=&quot;token keyword&quot;&gt;values&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;?&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        permission p1_0
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        member m1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        topic t1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        member c1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;역시나 예상대로 &lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 인 경우는 똑같이 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 이더라도 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 을 해서 가져오지 않는다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 로 &lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 을 테스트 해봤으니&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 로 더 테스트를 진행해서 가설을 사실로 굳혀보자!&lt;/p&gt;
+&lt;h3&gt;Lazy 테스트&lt;/h3&gt;
+&lt;p&gt;먼저 &lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt;로 테스트를 진행해보자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Test&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;permissionManyToOneFindById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt; permissionByFindById &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permission&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permissionByFindById&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getTopic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;topic&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permissionByFindById&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getMember&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        permission p1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        p1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        topic t1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        member c1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;결과는 당연하다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 하게 가져오니 &lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt; 로 가져오더라도 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 을 하지 않은 것이고, &lt;code class=&quot;language-text&quot;&gt;getTopic()&lt;/code&gt; 을 할 때 &lt;code class=&quot;language-text&quot;&gt;Topic&lt;/code&gt; 을 가져왔기 때문에 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리가 나갔다.&lt;/p&gt;
+&lt;p&gt;근데 &lt;code class=&quot;language-text&quot;&gt;member&lt;/code&gt; 를 조회하는 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리가 없다. &lt;/p&gt;
+&lt;p&gt;왜 그럴까?&lt;/p&gt;
+&lt;p&gt;이유는, 이번에 처음 알았는데 &lt;code class=&quot;language-text&quot;&gt;assertJ&lt;/code&gt; 로 테스트를 진행할 때 단 하나라도 예상한 결과가 나오지 않아 테스트가 실패하게 되면 그 즉시 테스트가 종료되는 것 같다.&lt;/p&gt;
+&lt;p&gt;그래서 뒤에 있는 &lt;code class=&quot;language-text&quot;&gt;getMember()&lt;/code&gt; 구문은 실행되지 않은 것이다.&lt;/p&gt;
+&lt;p&gt;어쨌든, 본론으로 돌아와 &lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 도 테스트를 진행해보자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Test&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;permissionManyToOneFindAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+    &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Permission&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; permission &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; permissionRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+  
+    &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permission&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getTopic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;topic&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+    &lt;span class=&quot;token function&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;permission&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getMember&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEqualTo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 테스트를 진행했고, 나간 쿼리는 당연히 위와 동일할 것이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        permission p1_0
+Hibernate: 
+    &lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+        topic t1_0 
+    &lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+        member c1_0 
+            &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+    &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+        t1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;역시 동일하다.&lt;/p&gt;
+&lt;h3&gt;ManyToOne 테스트를 통해 확실하게 유추할 수 있는 것&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 과 같은 목록 조회는 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 가 정말 &lt;code class=&quot;language-text&quot;&gt;select 시기&lt;/code&gt;만을 결정하지만, &lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt; 과 같은 단건 조회는 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 로 설정하게 되면, &lt;code class=&quot;language-text&quot;&gt;fetchType&lt;/code&gt; 이 &lt;code class=&quot;language-text&quot;&gt;select 시기 결정&lt;/code&gt;을 넘어 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 여부까지 결정할 수 있는 것이다. (최적화)&lt;/p&gt;
+&lt;p&gt;결과야 뻔하긴 하지만, 남은 &lt;code class=&quot;language-text&quot;&gt;OneToMany&lt;/code&gt; 테스트들도 진행해서 위 사실을 더욱 더 굳혀보자.&lt;/p&gt;
+&lt;h2&gt;OneToMany&lt;/h2&gt;
+&lt;h3&gt;테스트 준비&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;ManyToOne&lt;/code&gt; 테스트와 마찬가지로 &lt;code class=&quot;language-text&quot;&gt;OneToMany&lt;/code&gt; 테스트를 진행할 &lt;code class=&quot;language-text&quot;&gt;대상 Entity&lt;/code&gt; 와 &lt;code class=&quot;language-text&quot;&gt;Test 코드&lt;/code&gt;를 짜보자!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Member Entity (OneTOMany 컬럼만 있어서 딱 적합)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Entity&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@NoArgsConstructor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;access &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;PROTECTED&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Getter&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BaseTimeEntity&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;  
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Id&lt;/span&gt;  
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@GeneratedValue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;strategy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;GenerationType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;IDENTITY&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; id&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 생략 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@OneToMany&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;mappedBy &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;creator&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;  
+&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Topic&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; createdTopics &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  
+
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 생략 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;}&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;- Test 코드
+```java
+@Test  
+void memberOneToManyFindById() {  
+    Member memberByFindById = memberRepository.findById(member.getId()).get();  
+    assertThat(memberByFindById.getCreatedTopics().get(0)).isEqualTo(topic);  
+}  
+  
+@Test  
+void memberOneToManyFindAll() {  
+    List&amp;lt;Member&gt; members = memberRepository.findAll();  
+    assertThat(members.get(0).getCreatedTopics().get(0)).isEqualTo(topic);  
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Eager 에 대해서 먼저 테스트 해보자!&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;findById 로 테스트&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    member m1_0 
+&lt;span class=&quot;token keyword&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;join&lt;/span&gt;
+    topic c1_0 
+        &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id 
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+    m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이쯤되면 당연히 예상할 수 있듯이 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 을 해서 가져온다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;findAll 로 테스트&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    member m1_0
+Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    topic c1_0 
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+    c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이것도 당연히 예상할 수 있듯, &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 이 아닌 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 을 해서 가져오고, 실제로 &lt;code class=&quot;language-text&quot;&gt;Topic&lt;/code&gt; 에 &lt;code class=&quot;language-text&quot;&gt;createdTopics&lt;/code&gt; 에 접근하지 않더라도 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 구문이 발생하게 된다.&lt;/p&gt;
+&lt;p&gt;왜 ? 지금까지 계속보았듯 &lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 과 같은 &lt;code class=&quot;language-text&quot;&gt;목록 조회&lt;/code&gt;에서는 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 가 &lt;code class=&quot;language-text&quot;&gt;select 시기&lt;/code&gt;만을 결정하니까&lt;/p&gt;
+&lt;h3&gt;Lazy 도 테스트 해보자.&lt;/h3&gt;
+&lt;p&gt;정말 뻔하니 그냥 별다른 코멘트 없이 테스트 결과만을 나열하겠다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;findById&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    member m1_0 
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+    m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?
+Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    topic c1_0 
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+    c1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;member_id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;당연히 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 하지 않고&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;findAll&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;Hibernate: 
+&lt;span class=&quot;token keyword&quot;&gt;select&lt;/span&gt;
+	&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt; 수많은 컬럼들 &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt;
+    member m1_0 
+&lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;
+    m1_0&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;?&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;당연히 조회하지 않는다면 더 이상 &lt;code class=&quot;language-text&quot;&gt;select&lt;/code&gt; 쿼리를 발생시키지 않는다.&lt;/p&gt;
+&lt;h2&gt;최종적인 결론&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt; 는 &lt;code class=&quot;language-text&quot;&gt;FetchType&lt;/code&gt; 이 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 라면 &lt;code class=&quot;language-text&quot;&gt;join&lt;/code&gt; 을 해서 가져와준다 (최적화를 알아서 해주는 것)&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;findAll&lt;/code&gt; 은 &lt;code class=&quot;language-text&quot;&gt;findById&lt;/code&gt; 와 다르게 &lt;code class=&quot;language-text&quot;&gt;fetch type&lt;/code&gt; 이 &lt;code class=&quot;language-text&quot;&gt;Eager&lt;/code&gt; 인지 &lt;code class=&quot;language-text&quot;&gt;Lazy&lt;/code&gt; 인지에 따라 해당 데이터를 가져오기 위한 &lt;code class=&quot;language-text&quot;&gt;select 쿼리 발생 시기&lt;/code&gt;만을 결정한다. (즉, &lt;code class=&quot;language-text&quot;&gt;fetch type&lt;/code&gt; 으로 인해 &lt;code class=&quot;language-text&quot;&gt;join 여부&lt;/code&gt;가 결정되지 않음)&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[@Modifying 어노테이션의 옵션이 정상 동작하지 않는 문제]]></title><description><![CDATA[이 글은 우테코 괜찮을지도의 가 작성하였습니다. 배경 괜찮을지도 서비스에서는 테스트를  방식으로 수행하고 있습니다.
 란 우리가 알고 있는  테스트에서 따온 네이밍입니다. (서비스 -> 레포지토리까지의 테스트만으로도 E2E…]]></description><link>https://map-befine-official.github.io/trouble-shooting-modifying-annotation/</link><guid isPermaLink="false">https://map-befine-official.github.io/trouble-shooting-modifying-annotation/</guid><pubDate>Mon, 02 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 괜찮을지도의 &lt;code class=&quot;language-text&quot;&gt;쥬니&lt;/code&gt;가 작성하였습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
