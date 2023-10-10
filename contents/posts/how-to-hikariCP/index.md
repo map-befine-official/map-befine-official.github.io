@@ -78,5 +78,9 @@ spring:
 **위에서도 이야기했지만, 공식을 통해 도출된 값이 항상 최적인 것은 아닙니다.**
 <br>**각 서비스의 특성에 맞게, 커넥션 풀 사이즈를 설정해 보시면서 테스트를 수행하여 최적의 값을 도출해 내시길 바랍니다.**
 
+또한, 커넥션 풀 외에도 HikariCP에서 튜닝해야할 설정을 추천하고 있습니다.
+<br> 이 부분도 [참고](https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)하면 좋을 것 같습니다.
+
 ### 참고
 [HikariCP docs](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
+<br>[HikariCP MySQL Configuration](https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration)
