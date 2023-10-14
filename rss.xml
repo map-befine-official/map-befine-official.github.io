@@ -1,4 +1,79 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 06 Oct 2023 08:48:26 GMT</lastBuildDate><item><title><![CDATA[Fetch join 사용 시 MultipleBagFetchException의 발생 이유와 해결 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. N+1과 Fetch join 백엔드에서는 조회 API로 여러 연관 관계로 인해 발생하는 N+1 문제를 해결해야 했는데요. 예를 들면 장소(이하 핀) 다건 조회의 경우, 각 핀이 속한 지도(topic…]]></description><link>https://map-befine-official.github.io/jpa-multibag-fetch-exception/</link><guid isPermaLink="false">https://map-befine-official.github.io/jpa-multibag-fetch-exception/</guid><pubDate>Wed, 04 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 14 Oct 2023 18:14:05 GMT</lastBuildDate><item><title><![CDATA[HikariCP 적용기]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다. 배경 CPU…]]></description><link>https://map-befine-official.github.io/how-to-hikariCP/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-hikariCP/</guid><pubDate>Tue, 10 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우아한테크코스 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;쥬니&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;배경&lt;/h3&gt;
+&lt;p&gt;CPU 코어가 하나인 컴퓨터라도 수십 또는 수백 개의 쓰레드를 &lt;code class=&quot;language-text&quot;&gt;동시에&lt;/code&gt; 지원할 수 있습니다.
+&lt;br&gt; 하지만, 실제로 하나의 코어는 하나의 쓰레드만 실행할 수 있습니다.
+&lt;br&gt; &lt;code class=&quot;language-text&quot;&gt;쓰레드 스케줄링&lt;/code&gt;을 통해, 하나의 코어에서도 여러 개의 쓰레드를 동시에 지원할 수 있는 것이죠.&lt;/p&gt;
+&lt;p&gt;물론, 두 개의 쓰레드 A, B가 존재할 때 이를 순차적으로 실행하는 것이 성능적으로는 더 빠릅니다.
+&lt;br&gt; &lt;code class=&quot;language-text&quot;&gt;Context Switching Overhead&lt;/code&gt;가 없기 때문이죠 !&lt;/p&gt;
+&lt;p&gt;그렇다면, 어플리케이션과 관련된 쓰레드의 개수를 설정할 때, 코어의 개수와 동일하게 가져가면 될까요 ?
+&lt;br&gt; &lt;strong&gt;결론부터 이야기하면, 그렇지 않습니다 !&lt;/strong&gt;
+&lt;br&gt; 실제 어플리케이션에서는 데이터를 저장하고 있는 &lt;code class=&quot;language-text&quot;&gt;디스크&lt;/code&gt;를 고려해야 하기 때문입니다.&lt;/p&gt;
+&lt;p&gt;어플리케이션에서 사용하는 데이터베이스에는 디스크가 존재합니다.
+&lt;br&gt; 데이터를 읽기 위해서는, 물리적인 &lt;code class=&quot;language-text&quot;&gt;Disk Arm과 Spindle&lt;/code&gt;이 동작합니다.
+&lt;br&gt; 원하는 데이터를 찾기 위해 위와 같은 동작을 수행하며, 이때 드는 비용은 상당히 큽니다.
+&lt;br&gt; 이 시간을, &lt;code class=&quot;language-text&quot;&gt;I/O 대기 시간&lt;/code&gt;이라고 부르며, 해당 시간 동안 쓰레드들은 &lt;code class=&quot;language-text&quot;&gt;waiting&lt;/code&gt; 상태로 대기하게 됩니다.&lt;/p&gt;
+&lt;p&gt;그렇기 때문에, I/O 대기 시간으로 인해 waiting 상태인 쓰레드가 생기게 됩니다.
+&lt;br&gt; 즉, 일하지 않고 놀게 되는 코어가 생기게 됩니다.&lt;/p&gt;
+&lt;p&gt;그렇다면, 데이터베이스 Connection과 관련된 &lt;code class=&quot;language-text&quot;&gt;Thread Pool&lt;/code&gt;의 크기는 어느 정도로 관리하는 게 좋을까요 ?&lt;/p&gt;
+&lt;h3&gt;Hikari Connection Pool&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;HikariCP&lt;/code&gt; 공식 문서에서는 아래와 같은 추천 공식을 제공하고 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Connection Pool Size = (Core count * 2) + Effective spindle count&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;위 공식에서, &lt;code class=&quot;language-text&quot;&gt;Effective spindle count&lt;/code&gt;의 값은 사실상 하드디스크의 개수와 같다고 보면 됩니다.
+&lt;br&gt; 디스크 1개당, 1개의 물리적 spindle을 가지고 있기 때문이죠.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;괜찮을지도&lt;/code&gt; 서비스의 운영 서버 EC2 환경은 2개의 코어와 1개의 디스크를 사용하고 있습니다.
+&lt;br&gt; 이를 위 공식에 대입해 보면, &lt;code class=&quot;language-text&quot;&gt;Connection Pool Size = 2 * 2 + 1 = 5&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;즉, &lt;code class=&quot;language-text&quot;&gt;HikariCP&lt;/code&gt;에서 추천하는 커넥션 풀 사이즈는 5가 나오게 됩니다.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;성능 테스트&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;HikariCP&lt;/code&gt;에서 추천하는 &lt;code class=&quot;language-text&quot;&gt;괜찮을지도&lt;/code&gt; 서비스의 커넥션 풀 사이즈는 &lt;code class=&quot;language-text&quot;&gt;5&lt;/code&gt;임을 알 수 있었습니다.
+&lt;br&gt; 하지만, 이는 단순히 이론적인 내용일 뿐 맹신할 수는 없습니다.
+&lt;br&gt; 그래서, &lt;code class=&quot;language-text&quot;&gt;JMETER&lt;/code&gt;를 이용한 성능 테스트를 수행하였습니다.
+&lt;br&gt; 테스트에서는 다른 설정을 동일하게 두고, 커넥션 풀 사이즈만 변경하며 진행했습니다.&lt;/p&gt;
+&lt;p&gt;Connection Pool Size는 아래와 같이 yml 파일을 작성하여 수정할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;spring&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;datasource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;hikari&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;maximum-pool-size&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;5&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;- Connection Pool Size 10&lt;/strong&gt;
+&lt;br&gt; 기본 설정값인 10으로 설정한 뒤, 테스트를 수행하였습니다.
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/10a26b46520773c5069bbf584dacfc38/90f05/connection_pool_size_10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 47.64705882352941%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABkUlEQVR42o2R3XKbMBCFef+Hyk1nOpM06bSOsZ1icOyMkzgIIYEkJP5Od8GxL3rRMPPNWS1nj4SI0sMR6TbF29s7CllCiAKikP+HfWc+CKk0lvEaUd8P4GccR4ysX2Bg73hd943nJo6vr4isD/Bthya0k36FhpXnnIe3DVypMRiL/f6AyPkeLvSwvpv0X6g/eQa4dpi9LsCpGq52hIVpWnT0bpft6YQNGahhXEvaXXFnppre2QCrLawyMLKae76fqMnTEln6jEjbFowypGauL1CgrhpURYVK1qiUg2ZMOHvCNFPWdGI/IEkokIMUNUozh3KteIPSQOUaisIuvbOHA5QJl7WsPAz9l6eU7lDQjpIMhTSQpUVRtyh0AymqCe4XNMA9Vh7+1E+Eoq9wPTYJ3eFJOojSIT8piPcSOTHpRwVB4dJ0FBBo0w5CB8Ijp4BcXfVE88oOWP2hwN+rFMvNDovNMx7XOzzGWyzWGeLtC+5/rXH7sMT3uwV+cP0zxip5Ac+skgNpNmuc4ik74ubbHf4CH4H7TrRWz6MAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;connection_pool_size_10.png&apos; title=&apos;&apos; src=&apos;/static/10a26b46520773c5069bbf584dacfc38/ca1dc/connection_pool_size_10.png&apos; srcset=&apos;/static/10a26b46520773c5069bbf584dacfc38/e7570/connection_pool_size_10.png 170w,
+/static/10a26b46520773c5069bbf584dacfc38/f46e7/connection_pool_size_10.png 340w,
+/static/10a26b46520773c5069bbf584dacfc38/ca1dc/connection_pool_size_10.png 680w,
+/static/10a26b46520773c5069bbf584dacfc38/90f05/connection_pool_size_10.png 917w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;connection_pool_size_10.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;- Connection Pool Size 5&lt;/strong&gt;
+&lt;br&gt; HikariCP에서 제공하는 공식을 통해 도출된 값으로 설정한 뒤, 테스트를 수행하였습니다.
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8128bf50f73117b45859fedc872bdb32/3fcec/connection_pool_size_5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 47.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABVUlEQVR42l2R2XajQBBD+f9PnAzBxomTGJql9wVHoy7MHCcP96haJRUPNLfLG+ZVY9UGMSaUsgm5lJ+aH7pVj5ntjlzzPiCTFCISM402lssN9+/vPXSEn1UO3fe384Icsg6lwrlUnx9ovoYRPmaEVISYN+GYw/Ob5eACgo+I1GMfyh0xJPGbtuvh0wYbiuBCJnWmVt8luMXCzwbOeNi4CS5uj/yj5yKc5cG/3QXGF5KhWTYuy1tX1R5GaRgG9eEfO6Kl98AwowOaP+2ZgYLFZswMLTZhnS2WkT9qdljpL4dvd/0/m12FNWBZPZrz+wC1Rkw0JmUwDQumyUItHhMLSnNHnvW3J9Q+e8110Bh4UM0eSvGQ5hGTMVLHNfFopneQhOqP7PzQumO/afsvvF4GdO8K5+uMlvP5OtG7of+Y8XL6lPnl9IG2v6F7G9Ex00tmkMyu+/sf6Qu0us/J3qoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;connection_pool_size_5.png&apos; title=&apos;&apos; src=&apos;/static/8128bf50f73117b45859fedc872bdb32/ca1dc/connection_pool_size_5.png&apos; srcset=&apos;/static/8128bf50f73117b45859fedc872bdb32/e7570/connection_pool_size_5.png 170w,
+/static/8128bf50f73117b45859fedc872bdb32/f46e7/connection_pool_size_5.png 340w,
+/static/8128bf50f73117b45859fedc872bdb32/ca1dc/connection_pool_size_5.png 680w,
+/static/8128bf50f73117b45859fedc872bdb32/3fcec/connection_pool_size_5.png 914w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;connection_pool_size_5.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;유의미한 TPS 차이를 통해, 커넥션 풀 사이즈가 5일 때의 성능이 좋다는 것을 확인할 수 있었습니다.
+&lt;br&gt; 물론, 트래픽 양에 따라, 다른 값을 적용하였을 때가 더 최적의 성능을 나타낼 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;괜찮을지도&lt;/code&gt; 서비스에서는 성능 테스트 목표치량을 기준으로 테스트를 수행하였기 때문에, 위와 같은 결과가 도출되었습니다.&lt;/p&gt;
+&lt;h3&gt;마치며&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;위에서도 이야기했지만, 공식을 통해 도출된 값이 항상 최적인 것은 아닙니다.&lt;/strong&gt;
+&lt;br&gt;&lt;strong&gt;각 서비스의 특성에 맞게, 커넥션 풀 사이즈를 설정해 보시면서 테스트를 수행하여 최적의 값을 도출해 내시길 바랍니다.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;또한, 커넥션 풀 외에도 HikariCP에서 튜닝해야할 설정을 추천하고 있습니다.
+&lt;br&gt; 이 부분도 &lt;a href=&quot;https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration&quot;&gt;참고&lt;/a&gt;하면 좋을 것 같습니다.&lt;/p&gt;
+&lt;h3&gt;참고&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing&quot;&gt;HikariCP docs&lt;/a&gt;
+&lt;br&gt;&lt;a href=&quot;https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration&quot;&gt;HikariCP MySQL Configuration&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Fetch join 사용 시 MultipleBagFetchException의 발생 이유와 해결 방법]]></title><description><![CDATA[이 글은 우테코 괜찮을지도팀의 가 작성했습니다. N+1과 Fetch join 백엔드에서는 조회 API로 여러 연관 관계로 인해 발생하는 N+1 문제를 해결해야 했는데요. 예를 들면 장소(이하 핀) 다건 조회의 경우, 각 핀이 속한 지도(topic…]]></description><link>https://map-befine-official.github.io/jpa-multibag-fetch-exception/</link><guid isPermaLink="false">https://map-befine-official.github.io/jpa-multibag-fetch-exception/</guid><pubDate>Wed, 04 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;도이&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;N+1과 Fetch join&lt;/h2&gt;
