@@ -63,11 +63,11 @@ spring:
 
 **- Connection Pool Size 10**
 <br> 기본 설정값인 10으로 설정한 뒤, 테스트를 수행하였습니다.
-![connection_pool_size_10.png](.index_image%2Fconnection_pool_size_10.png)
+![connection_pool_size_10.png](.index_image/connection_pool_size_10.png)
 
 **- Connection Pool Size 5**
 <br> HikariCP에서 제공하는 공식을 통해 도출된 값으로 설정한 뒤, 테스트를 수행하였습니다.
-![connection_pool_size_5.png](.index_image%2Fconnection_pool_size_5.png)
+![connection_pool_size_5.png](.index_image/connection_pool_size_5.png)
 
 유의미한 TPS 차이를 통해, 커넥션 풀 사이즈가 5일 때의 성능이 좋다는 것을 확인할 수 있었습니다.
 <br> 물론, 트래픽 양에 따라, 다른 값을 적용하였을 때가 더 최적의 성능을 나타낼 수 있습니다.
