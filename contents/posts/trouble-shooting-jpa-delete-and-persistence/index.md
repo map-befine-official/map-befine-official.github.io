@@ -139,7 +139,7 @@ soft delete 메서드로 인한 영속화가 되기 이전에 flush해서 member
 그래서 이에 대해서는 `blockMember()` 호출 전에 `testEntityManager.clear()`로 영속성 컨텍스트를 초기화해두는 것으로 해결했습니다.  
 
 
-**하지만 정확 원인이 궁금했습니다. 
+**하지만 정확한 원인이 궁금했습니다. 
 왜 `atlas`, `permission`은 삭제되고 `bookmark`만 삭제되지 않았을까요?**  
 
 ## 원인
