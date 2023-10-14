@@ -20,7 +20,7 @@ JPA에 대한 지식이 부족한 상태에서 삽질을 하며 알게 된 것�
 ### 도메인: 회원 차단 기능
 도메인에 대해 먼저 설명드리겠습니다.  
 관리자 API에서 회원을 차단하면, 차단한 회원의 지도 `Topic`, 핀 `Pin`, 핀 이미지 `PinImage`를 삭제 상태(soft delete)로 변경합니다.  
-그리고 매핑 테이블 역할을 하는 엔티티인 `Bookmark 즐겨찾기`, `Atlas 모아보기`, `Permission 권한`는 실제로 삭제(hard delete)합니다.
+그리고 매핑 테이블 역할을 하는 엔티티인 `Bookmark 즐겨찾기`, `Atlas 모아보기`, `Permission 권한`은 실제로 삭제(hard delete)합니다.
 
 
 ```java
@@ -131,7 +131,7 @@ soft delete 메서드로 인한 영속화가 되기 이전에 flush해서 member
 ## 문제 상황 2 : 테스트에서 발생하지 않는 일부 쿼리
 
 그런데도 테스트는 성공하지 않았습니다. 🥲  
-여전히 `delete bookmark~` 쿼리만 발생하지 않고 있었습니다.  
+`delete bookmark~` 쿼리는 여전히 발생하지 않고 있었습니다.  
 
 테스트 메서드와 `blockMember()`는 같은 트랜잭션으로 묶이기 때문에 `// when`절에서의 영속화 상태 때문일 것이라 짐작했습니다.  
 `bookmark`를 참조하는 `topic`, 또는 `member` 객체가 영속화되어있기 때문에 delete 쿼리가 나가지 않는 것이라 생각했습니다.  
