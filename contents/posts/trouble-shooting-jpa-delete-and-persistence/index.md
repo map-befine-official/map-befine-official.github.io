@@ -1,8 +1,8 @@
 ---
 title: "JPA 엔티티를 삭제할 때 영속성과 연관 관계가 중요한 이유"
 description: "JPA로 연관 관계를 가진 엔티티들을 삭제하는 과정에서 겪은 삽질과 교훈을 기록했습니다."
-date: 2023-10-04
-update: 2023-10-04
+date: 2023-10-13
+update: 2023-10-13
 tags:
 - Spring Data JPA
 - Hibernate
