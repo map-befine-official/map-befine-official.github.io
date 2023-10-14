@@ -165,9 +165,12 @@ soft delete 메서드로 인한 영속화가 되기 이전에 flush해서 member
 
 ```java
     // Topic.class
-    public void removeAllBookmarks() {
-        bookmarks.clear();
-        bookmarkCount = 0;
+    public void removeBookmarkBy(Member member) {
+        bookmarks.stream()
+        .filter(bookmark -> bookmark.getMember().isSame(member))
+        .findFirst()
+        .ifPresent(this::removeBookmark);
+        bookmarkCount--;
     }
 
     // AdminCommandService.class
@@ -177,9 +180,10 @@ soft delete 메서드로 인한 영속화가 되기 이전에 flush해서 member
 
         permissionRepository.deleteAllByMemberId(memberId);
         atlasRepository.deleteAllByMemberId(memberId);
+        // 변경된 부분
+        topicRepository.findTopicsByBookmarksMemberId(memberId)
+            .forEach(topic -> topic.removeBookmarkBy(member));
         atlasRepository.flush();
-        topicRepository.findAllByCreatorId(memberId) // 변경된 부분
-                .forEach(Topic::removeAllBookmarks);
         pinImageRepository.deleteAllByPinIds(pinIds);
         pinRepository.deleteAllByMemberId(memberId);
         topicRepository.deleteAllByMemberId(memberId);
