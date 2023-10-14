@@ -193,12 +193,11 @@ soft delete 메서드로 인한 영속화가 되기 이전에 flush해서 member
 ## 결론
 이번 삽질을 계기로 JPA를 잘 학습한 뒤 사용해야 한다는 교훈을 다시 한 번 몸소 느꼈습니다..  
 
-엔티티의 생명 주기에 대해 잘 이해하고 객체를 생성 및 삭제해야한다는 것, 삭제할 때에도 연관 관계의 관리가 중요하다는 것을 알았습니다.  
-
+엔티티의 생명 주기에 대해 잘 이해하고 객체를 생성 및 삭제해야한다는 것, 삭제할 때에도 연관 관계의 관리가 중요하다는 것을 알았습니다.
 이처럼 예상하지 못한 동작을 피하기 위해 삭제 로직에서도 연관 관계 편의 메서드를 정의하는 방식으로 코드를 잘 작성할 필요가 있어 보입니다. 
 
 
 ## 참고 자료
-[[Spring boot] JPA Delete is not Working, 영속성와 연관 관계를 고려했는가.](https://velog.io/@jsb100800/spring-12)
-[[jpa] CascadeType.PERSIST를 함부로 사용하면 안되는 이유](https://joont92.github.io/jpa/CascadeType-PERSIST%EB%A5%BC-%ED%95%A8%EB%B6%80%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%95%88%EB%90%98%EB%8A%94-%EC%9D%B4%EC%9C%A0/)
+- [[Spring boot] JPA Delete is not Working, 영속성와 연관 관계를 고려했는가.](https://velog.io/@jsb100800/spring-12)  
+- [[jpa] CascadeType.PERSIST를 함부로 사용하면 안되는 이유](https://joont92.github.io/jpa/CascadeType-PERSIST%EB%A5%BC-%ED%95%A8%EB%B6%80%EB%A1%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%A9%B4-%EC%95%88%EB%90%98%EB%8A%94-%EC%9D%B4%EC%9C%A0/)
 
