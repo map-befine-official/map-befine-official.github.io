@@ -29,7 +29,7 @@ JPA에 대한 지식이 부족한 상태에서 삽질을 하며 알게 된 것�
         member.updateStatus(Status.BLOCKED);
 
         deleteAllRelated(member);
-        }
+    }
 
     private void deleteAllRelated(Member member) {
         List<Long> pinIds = extractPinIdsByMember(member);
