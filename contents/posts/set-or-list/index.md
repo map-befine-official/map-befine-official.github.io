@@ -188,7 +188,7 @@ public class Topic extends BaseTimeEntity {
 [http-nio-8080-exec-1] 2072 INFO  com.mapbefine.mapbefine.common.filter.LatencyLoggingFilter - Latency : 5.348s, Query count : 1, Request URI : /topics
 ```
 
-솔직히 말해서.. `유의미한 차이`를 볼 수 없었습니다.
+위 테스트 결과들만으로는 `유의미한 차이`가 보이지 않아 `원인`을 추론해보기 어려웠습니다.
 
 ### 지금까지 무의미한 데이터로 테스트 해본 것은 아닐까?
 
@@ -211,7 +211,7 @@ public class Topic extends BaseTimeEntity {
 [http-nio-8080-exec-3] 2000 INFO  com.mapbefine.mapbefine.common.filter.LatencyLoggingFilter - Latency : 7.253s, Query count : 1, Request URI : /topics
 ```
 
-네... 역시나 유의미한 차이를 볼 수 없었습니다.
+테스트 데이터를 변경하더라도, 역시나 `유의미한 차이`를 볼 수 없었습니다.
 
 ### 내린 결론 (가설)
 
