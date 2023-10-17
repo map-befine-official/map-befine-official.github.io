@@ -231,7 +231,7 @@ public class Topic extends BaseTimeEntity {
 
 `문제`를 탐구하다가 `재미있는 글`을 발견했습니다.
 
-[재미있는 글](https://www.inflearn.com/questions/321256/collection-type%EC%9C%BC%EB%A1%9C-set-%EB%8C%80%EC%8B%A0-list%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0%EA%B0%80-%EC%9E%88%EB%8A%94%EC%A7%80%EC%9A%94)
+[JPA 에서 Set 을 사용할 때 주의점](https://www.inflearn.com/questions/321256/collection-type%EC%9C%BC%EB%A1%9C-set-%EB%8C%80%EC%8B%A0-list%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0%EA%B0%80-%EC%9E%88%EB%8A%94%EC%A7%80%EC%9A%94)
 
 질문은 아래와 같았습니다.
 
