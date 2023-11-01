@@ -167,12 +167,18 @@ create spatial index location_idx01 on location(coordinate);
 총 데이터는 약 10만건이 존재하며, 1km 이내의 데이터, 3km 이내의 데이터 조회를 수행하였습니다.
 
 공간 인덱스 적용 전
-1km 이내 (40건)
-3km 이내 (300건)
+1km 이내 (40건)<br>
+![test-not-spatial-1km.png](.index_image%2Ftest-not-spatial-1km.png)
 
-공간 인덱스 적용 전
-1km 이내 (40건)
-3km 이내 (300건)
+3km 이내 (300건)<br>
+![test-not-spatial-3km.png](.index_image%2Ftest-not-spatial-3km.png)
+
+공간 인덱스 적용 후
+1km 이내 (40건)<br>
+![test-spatial-1km.png](.index_image%2Ftest-spatial-1km.png)
+
+3km 이내 (300건)<br>
+![test-spatial-3km.png](.index_image%2Ftest-spatial-3km.png)
 
 **성능이 최소 10배 이상 차이 나는 것을 확인할 수 있었습니다.**
 
