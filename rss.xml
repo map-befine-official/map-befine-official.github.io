@@ -1,9 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 01 Nov 2023 08:35:36 GMT</lastBuildDate><item><title><![CDATA[공간 인덱스 적용기]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다. 배경  서비스는 아래와 같이, 위치와 관련된 정보를 별도의 테이블로 관리하고 있습니다. diagram.png…]]></description><link>https://map-befine-official.github.io/spatial-index/</link><guid isPermaLink="false">https://map-befine-official.github.io/spatial-index/</guid><pubDate>Thu, 19 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 01 Nov 2023 08:41:57 GMT</lastBuildDate><item><title><![CDATA[공간 인덱스 적용기]]></title><description><![CDATA[…]]></description><link>https://map-befine-official.github.io/spatial-index/</link><guid isPermaLink="false">https://map-befine-official.github.io/spatial-index/</guid><pubDate>Thu, 19 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우아한테크코스 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;쥬니&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3&gt;배경&lt;/h3&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;괜찮을지도&lt;/code&gt; 서비스는 아래와 같이, 위치와 관련된 정보를 별도의 테이블로 관리하고 있습니다.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;.index_image%2Fdiagram.png&quot; alt=&quot;diagram.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/9eb08cee88053e732c4f75755a33f56a/3a6ec/diagram.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 39.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWklEQVR42n2R3UvDMBTF+9eLD+qb+CAqOAXdBBEcMhUcw02ngmMyEEWUtlu72Tb9WtqmrcckutLB9OFA7s09v5xwlftnDau1a6xwrR21sXzQQrX5hK88Q5qmhRhLwZv4MB0cNvvYv+yhcvEotcfPW2cP6L8ZUPqvGiqNO1Sveqhx7dQ7aNwOuDcHK2AMSZJI4Is6xnb9BpunXawft6U2TjpY2j1Hd/AOJYmmoD4BUm7IYsSBi5iGSLOsgAkVaVmCqUcQh64U8gQ5o4gCwhERlCAIoGoaLNuG5/twCIHrusgWAEWP0giapkPTdZjjMVzPx6dlQx+NEAQhlDAMMeIF4SABJ7/AMqwMjKJIzluWBZ8HEBIe0zQhWD8JVRWO48hLwzBg87SLvjsDDofDOaDwFkBKKSaTCTzPkw0BE4+UNzy/bQbhEWCxKKE4jmUt7pTZy+UUf8H+m5n1vgGdU1mhOVDnIQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;diagram.png&apos; title=&apos;&apos; src=&apos;/static/9eb08cee88053e732c4f75755a33f56a/ca1dc/diagram.png&apos; srcset=&apos;/static/9eb08cee88053e732c4f75755a33f56a/e7570/diagram.png 170w,
+/static/9eb08cee88053e732c4f75755a33f56a/f46e7/diagram.png 340w,
+/static/9eb08cee88053e732c4f75755a33f56a/ca1dc/diagram.png 680w,
+/static/9eb08cee88053e732c4f75755a33f56a/3a6ec/diagram.png 686w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;diagram.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;장소를 등록할 때, 주소 검색을 사용할 수도 있지만, &lt;strong&gt;지도 위의 좌표를 클릭하여 등록&lt;/strong&gt;할 수도 있습니다.
 &lt;br&gt; 사용자들이 동일한 장소를 등록하기 위해 지도상의 특정 위치를 클릭한다고 가정해 보겠습니다.
 &lt;br&gt; 이때, 미터 혹은 그 이하의 오차 없이 동일한 위치를 선택할 확률은 얼마나 될까요 ?
@@ -36,7 +47,17 @@
 &lt;/blockquote&gt;
 &lt;p&gt;MySQL에서는 공간 정보를 나타내는 데이터 타입으로 Point, Line, Polygon, Geometry를 지원합니다.
 &lt;br&gt; MBR은 이러한 데이터 타입을 감쌀 수 있는 최소 크기의 사각형을 의미합니다.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;.index_image%2Fr-tree.png&quot; alt=&quot;r-tree.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 548px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/ad58f108c7db6fa790c4ed37ea50ede1/9079b/r-tree.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 65.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACKElEQVR42nVTa28SQRTl/38yJiam0fiiVNimSW2t0mXB1FQp9hUFF4QmtgoEdpf37vJajnPudmg1cZLLXIY7555z5pIYj8dwHAeLxQKz2UyC+f3o9/tg3Wg0wmQyWZ+HYYhpOMV0GgdXwvd9AdRrtVqtQy8za+H87AKe56HT6cDpOqjVfiiQUIDmszn8iY9oGSHBC57XQ6l0ipNiCY3GlXRnIdnyknloIfvORBQtMZ/PpdbIbAtrNmbd9c9r9fst4M3NL7x4toknG8/x6bgorKIoZshiAqaSafR6PQEcDocIggBUR9a1Wh3lciWWzA96Q58YpB4DRmufcmYBG4+fovm7KWcE1YsEki+3xIY1QwKym/aQ6+PRMZKvUqhWayhYR9jZ3hVW2gpd9+1rBVbuAyZK/kI1EkBKaTabUkxGjFarhXq9oR6hi/03b9WlvAAQlICaSOa1gapdQxAGwlwAmdx/1X/X2ek5rtRjEYj+acnM01sGPNdTDCd3gPTlf4DL5VJ2267i4YNHKH4+geu5ck7PvqgX9/0Ag8Hwb4Zaqh5SnVPiUEnj3O3tHoinnW5HAQwk2u22jB1zNkloZgNF//LiUl6anrquKzvHotvtot/rCzAv6hqyorpK+TsMY0eGPqFnzbZtMZ6RtwpqVCxYZh6HWROZtIHs+5zKc/Kd+/7egfx7tB2byZQi4dxJJiOazO5kQQbxbN4yUrLIkhEr8KSe1tAWBtn+AZpBynJQvy4jAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;r-tree.png&apos; title=&apos;&apos; src=&apos;/static/ad58f108c7db6fa790c4ed37ea50ede1/9079b/r-tree.png&apos; srcset=&apos;/static/ad58f108c7db6fa790c4ed37ea50ede1/e7570/r-tree.png 170w,
+/static/ad58f108c7db6fa790c4ed37ea50ede1/f46e7/r-tree.png 340w,
+/static/ad58f108c7db6fa790c4ed37ea50ede1/9079b/r-tree.png 548w&apos; sizes=&apos;(max-width: 548px) 100vw, 548px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;r-tree.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;출처 : Real My SQL 8.0&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -147,14 +168,57 @@ implementation &apos;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/sp
 &lt;p&gt;총 데이터는 약 10만건이 존재하며, 1km 이내의 데이터, 3km 이내의 데이터 조회를 수행하였습니다.&lt;/p&gt;
 &lt;p&gt;공간 인덱스 적용 전
 1km 이내 (40건)&lt;br&gt;
-&lt;img src=&quot;.index_image%2Ftest-not-spatial-1km.png&quot; alt=&quot;test-not-spatial-1km.png&quot;&gt;&lt;/p&gt;
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 631px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/864352edc04fe0fb8a9ce4fc2b6fc381/077d3/test-not-spatial-1km.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 37.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9klEQVR42oWR2U6FMBRFC2EqBaSFMIaZa7ySG///67Y9RzFGDT7slBS69uJUlGUJGUUIZYzeaOypxFRoLFWJlyyGUTFyYyClhOM4EEJc5zgOzPOMqqrwlOcoohC178E4Asr5feA79Hz+USS4vW4adG2LpuvQTxMbqyRBlmWc3JalaQrf968NT7pSik1f73e8PR54vt0wjSO2bcO+70gsnKC0BkHAiWhUYcgrSX2WfZDpg9YaruvKkMla1nWNYRg4WmsuXJYFxs6UbIui4BJ6RyGoOGdAwL7v2YZyznW0lgQkMzpARpeX43ne1++cm67rcv690T/yDhUVneoxoQXOAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;test-not-spatial-1km.png&apos; title=&apos;&apos; src=&apos;/static/864352edc04fe0fb8a9ce4fc2b6fc381/077d3/test-not-spatial-1km.png&apos; srcset=&apos;/static/864352edc04fe0fb8a9ce4fc2b6fc381/e7570/test-not-spatial-1km.png 170w,
+/static/864352edc04fe0fb8a9ce4fc2b6fc381/f46e7/test-not-spatial-1km.png 340w,
+/static/864352edc04fe0fb8a9ce4fc2b6fc381/077d3/test-not-spatial-1km.png 631w&apos; sizes=&apos;(max-width: 631px) 100vw, 631px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;test-not-spatial-1km.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;3km 이내 (300건)&lt;br&gt;
-&lt;img src=&quot;.index_image%2Ftest-not-spatial-3km.png&quot; alt=&quot;test-not-spatial-3km.png&quot;&gt;&lt;/p&gt;
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/211d1b93e00e49752380933d5a6356f8/00c79/test-not-spatial-3km.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.94117647058824%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWklEQVR42pVS2W6DQBBbbrIQyMENCYqCCAX1/z/PHW8Filq1TR+sZWeQx+uxapoGWZbhdDqZs6lr1FWFSGtEUYS2bU0vCAKEYWjA75/uyvd9c3FdF47rwSY8D5ZlwbZtsM+eUuo1xHEMItrvUScxxjTGIJiOCao0gZbeXnpJkmzg/bn2fFecvhOpWgrvqcZSF5ivHeYyxxSHOIoNtIKvoGIq/w3qer1+ThD2bBeishVa30EniGz5SUhI9PKT8zxHI8ZXsggdxShkScFOS9MST11DxleseCb/po51fnCbfd/jdrvhbZrQi+pcntl1ndkycT6fjUcvLEiZqVR4v9+xLAvmeQatIFgj2RqhWmKVpikOhwOKotjiRtA6tUovyxLjOOLxeBgwnyQchgGXy8UQ8SQJ8+ZJtHiusdvi5TiOUUh2klIpTyqgEk7WEvLNo79AInrFiWvxX0H+gg+BVPc0ndVKzgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;test-not-spatial-3km.png&apos; title=&apos;&apos; src=&apos;/static/211d1b93e00e49752380933d5a6356f8/ca1dc/test-not-spatial-3km.png&apos; srcset=&apos;/static/211d1b93e00e49752380933d5a6356f8/e7570/test-not-spatial-3km.png 170w,
+/static/211d1b93e00e49752380933d5a6356f8/f46e7/test-not-spatial-3km.png 340w,
+/static/211d1b93e00e49752380933d5a6356f8/ca1dc/test-not-spatial-3km.png 680w,
+/static/211d1b93e00e49752380933d5a6356f8/00c79/test-not-spatial-3km.png 879w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;test-not-spatial-3km.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;공간 인덱스 적용 후
 1km 이내 (40건)&lt;br&gt;
-&lt;img src=&quot;.index_image%2Ftest-spatial-1km.png&quot; alt=&quot;test-spatial-1km.png&quot;&gt;&lt;/p&gt;
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/14c3ee91ccfcfdb7d96661b680facd32/3bd09/test-spatial-1km.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 8.235294117647058%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXElEQVR42o2OzQqAMAyDu11q1/1UGQMvvoD4/o8X7UDPHsKXlAZChy64uuG0jC0JWAQhBBDR5B/FGL8Ojd6xr4ZhDaVktOYsSCmh1gpVnfS7+ze7/EeeAU7vMDNum+ksGmreviMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;test-spatial-1km.png&apos; title=&apos;&apos; src=&apos;/static/14c3ee91ccfcfdb7d96661b680facd32/ca1dc/test-spatial-1km.png&apos; srcset=&apos;/static/14c3ee91ccfcfdb7d96661b680facd32/e7570/test-spatial-1km.png 170w,
+/static/14c3ee91ccfcfdb7d96661b680facd32/f46e7/test-spatial-1km.png 340w,
+/static/14c3ee91ccfcfdb7d96661b680facd32/ca1dc/test-spatial-1km.png 680w,
+/static/14c3ee91ccfcfdb7d96661b680facd32/3bd09/test-spatial-1km.png 896w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;test-spatial-1km.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;3km 이내 (300건)&lt;br&gt;
-&lt;img src=&quot;.index_image%2Ftest-spatial-3km.png&quot; alt=&quot;test-spatial-3km.png&quot;&gt;&lt;/p&gt;
+&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/fc391f90d439899ede99d95b34f42266/6f18b/test-spatial-3km.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 9.411764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAX0lEQVR42mWNSwrAIAxERQU1mvjBnqD0AL3/4aZGKBS6eGTyFjOGa8U5Ku4puIQgpSCEAOccvPc/vt5a+/OGmdFW6TEnRmvovUNEkFICEW3KGlFel3PeV4djjPvXrO4B2k4sZc5AZW0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;test-spatial-3km.png&apos; title=&apos;&apos; src=&apos;/static/fc391f90d439899ede99d95b34f42266/ca1dc/test-spatial-3km.png&apos; srcset=&apos;/static/fc391f90d439899ede99d95b34f42266/e7570/test-spatial-3km.png 170w,
+/static/fc391f90d439899ede99d95b34f42266/f46e7/test-spatial-3km.png 340w,
+/static/fc391f90d439899ede99d95b34f42266/ca1dc/test-spatial-3km.png 680w,
+/static/fc391f90d439899ede99d95b34f42266/6f18b/test-spatial-3km.png 886w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;test-spatial-3km.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;성능이 최소 10배 이상 차이 나는 것을 확인할 수 있었습니다.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;예비군으로 인해, 대신 성능 테스트를 진행해 준 &lt;code class=&quot;language-text&quot;&gt;준팍&lt;/code&gt; 고맙습니다 !&lt;/strong&gt;&lt;/p&gt;
 &lt;h3&gt;마치며&lt;/h3&gt;
