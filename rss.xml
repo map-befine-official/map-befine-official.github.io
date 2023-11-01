@@ -1,4 +1,172 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 27 Oct 2023 12:57:57 GMT</lastBuildDate><item><title><![CDATA[괜찮을지도 사이트 최적화 진행]]></title><description><![CDATA[…]]></description><link>https://map-befine-official.github.io/how-to-optimize-website/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-optimize-website/</guid><pubDate>Wed, 18 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of 괜찮을지도]]></title><description><![CDATA[안녕하세요! 괜찮을지도 기술블로그입니다.]]></description><link>https://map-befine-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 01 Nov 2023 08:35:36 GMT</lastBuildDate><item><title><![CDATA[공간 인덱스 적용기]]></title><description><![CDATA[이 글은 우아한테크코스 괜찮을지도팀의 가 작성했습니다. 배경  서비스는 아래와 같이, 위치와 관련된 정보를 별도의 테이블로 관리하고 있습니다. diagram.png…]]></description><link>https://map-befine-official.github.io/spatial-index/</link><guid isPermaLink="false">https://map-befine-official.github.io/spatial-index/</guid><pubDate>Thu, 19 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우아한테크코스 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;쥬니&lt;/code&gt;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;배경&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;괜찮을지도&lt;/code&gt; 서비스는 아래와 같이, 위치와 관련된 정보를 별도의 테이블로 관리하고 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;.index_image%2Fdiagram.png&quot; alt=&quot;diagram.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;장소를 등록할 때, 주소 검색을 사용할 수도 있지만, &lt;strong&gt;지도 위의 좌표를 클릭하여 등록&lt;/strong&gt;할 수도 있습니다.
+&lt;br&gt; 사용자들이 동일한 장소를 등록하기 위해 지도상의 특정 위치를 클릭한다고 가정해 보겠습니다.
+&lt;br&gt; 이때, 미터 혹은 그 이하의 오차 없이 동일한 위치를 선택할 확률은 얼마나 될까요 ?
+&lt;br&gt; 거의 불가능에 가깝다고 생각합니다.
+&lt;br&gt; 물론, 사용자의 입력을 그대로 저장할 필요도 있었습니다.
+&lt;br&gt; 하지만, 데이터의 정확성이 크게 요구되는 서비스는 아니라는 점에서, DB 공간을 효율적으로 관리하는 것이 우선시 되었습니다.
+&lt;br&gt; 이에 따라, 등록 장소 반경 10M 이내에 좌표가 존재하는 경우, 기존 좌표를 재사용하기 위해 테이블을 분리한 것이었죠.&lt;/p&gt;
+&lt;p&gt;데이터 공간의 효율성을 위해, 장소 등록시 마다 매번 위치 좌표와 관련된 쿼리가 수행되고 있었습니다.
+&lt;br&gt; 물론, 조회용 API에서 해당 로직을 수행하지 않기 때문에 인덱싱의 중요성이 그리 높지 않았습니다.
+&lt;br&gt; 하지만, 추후 사용자의 접속 위치를 기반으로 여러 기능들을 제공할 계획을 가지고 있습니다.
+&lt;br&gt; 현재의 기능을 위해서도, 앞으로의 기능을 위해서도 공간 인덱스 적용은 반드시 필요한 상황이었습니다.&lt;/p&gt;
+&lt;h3&gt;공간 인덱스&lt;/h3&gt;
+&lt;p&gt;공간 인덱스는 2차원 공간 개념 값을 다루는 R-Tree 알고리즘을 사용합니다.
+&lt;br&gt; 이러한 R-Tree 알고리즘을 이해하기 위해서는 &lt;code class=&quot;language-text&quot;&gt;MBR&lt;/code&gt;이라는 개념이 필수적입니다.
+&lt;br&gt; MBR(Minimum Bounding Rectangle)은 아래 사진 하나로 설명이 가능할 것 같습니다.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3c9f6647f7be530335496f99755fd238/2d81a/mbr.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 44.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRUlEQVR42nVS2W6DQAzk/z+nqvoBjSrlgYcoQjlIRZo2XOFIOAMkYcq4WgREtWTtrr0ez3hXu91uSNMUbdtCGWN5no9itPv9jjRLUdf1KF4UBeI4QlVV0MqygGmaAjK8cDz+YGplWWK9XmO5XI6anU4nrFYrZFkGbVjAS2RBi+MYURSNWF+rKy6XC3a7HXzf73Pczz/msgrgZrNB0zSSZAHd8/yu8FP2tCRJYBhGD05Vytj89eUN+/3XHyAl0jmD7XYrIGTKlTIUCM/ME8C27V4VZzp7nyFLJ5Ifj4cUclYEoivmahwcg+d5Io85EuF99QYa/jEWs4A/gHLZjArIhnvmCTL9CU+ALA7DULqez7GcyUrXdSwWCwRB0OUDiXMEXIeg2vCF1RewLAtBtx6+D508V2bmOI6467oimU0dxxbpZKwAfwG83rW/bmsBfAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img.png&apos; title=&apos;&apos; src=&apos;/static/3c9f6647f7be530335496f99755fd238/ca1dc/mbr.png&apos; srcset=&apos;/static/3c9f6647f7be530335496f99755fd238/e7570/mbr.png 170w,
+/static/3c9f6647f7be530335496f99755fd238/f46e7/mbr.png 340w,
+/static/3c9f6647f7be530335496f99755fd238/ca1dc/mbr.png 680w,
+/static/3c9f6647f7be530335496f99755fd238/2d81a/mbr.png 840w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;img.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;출처 : Real My SQL 8.0&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;MySQL에서는 공간 정보를 나타내는 데이터 타입으로 Point, Line, Polygon, Geometry를 지원합니다.
+&lt;br&gt; MBR은 이러한 데이터 타입을 감쌀 수 있는 최소 크기의 사각형을 의미합니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;.index_image%2Fr-tree.png&quot; alt=&quot;r-tree.png&quot;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;출처 : Real My SQL 8.0&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;이러한 MBR의 포함 관계를 위 사진처럼 나타낼 수 있습니다.
+&lt;br&gt; 이를 B-Tree 형태로 구현한 인덱스가 R-Tree 인덱스입니다.&lt;/p&gt;
+&lt;p&gt;이 정도의 지식만 있으면, 공간 인덱스를 적용하는 데에 큰 어려움은 없습니다. &lt;/p&gt;
+&lt;h3&gt;기존 코드&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;    &lt;span class=&quot;token comment&quot;&gt;// LocationRepository.class&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Query&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;token string&quot;&gt;&quot;SELECT l FROM Location l &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;WHERE ( 6371000 * acos( cos( radians(:#{#current_coordinate.latitude}) ) &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;      * cos( radians( l.coordinate.latitude ) ) &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;      * cos( radians( l.coordinate.longitude ) - radians(:#{#current_coordinate.longitude}) ) &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;      + sin( radians(:#{#current_coordinate.latitude}) ) &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;      * sin( radians( l.coordinate.latitude ) ) ) ) &amp;lt;= :distance&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Location&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByCoordinateAndDistanceInMeters&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;      
+            &lt;span class=&quot;token annotation punctuation&quot;&gt;@Param&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;current_coordinate&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Coordinate&lt;/span&gt; coordinate&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;token annotation punctuation&quot;&gt;@Param&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;distance&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;double&lt;/span&gt; distance
+    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;공간 인덱스를 적용하기 전, 등록 좌표를 기준으로 특정 반경 내에 존재하는 좌표를 조회하는 로직입니다.
+&lt;br&gt; 위 로직은 &lt;code class=&quot;language-text&quot;&gt;좌표 기반 거리 계산을 위한 Haversine 공식&lt;/code&gt;을 적용한 것입니다.
+&lt;br&gt; 로직을 이해하기도 어렵고, Table Full Scan을 통해 쿼리가 수행되므로, 성능 개선이 필요한 상태입니다.&lt;/p&gt;
+&lt;h3&gt;공간 인덱스 적용&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;//build.gradle&lt;/span&gt;
+
+implementation &apos;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;hibernate&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;hibernate&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;spatial&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;6.2&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;.5&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Final&apos;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;우선, 공간 인덱스를 적용하기 위해 위와 같은 의존성을 추가해 줍니다.
+&lt;br&gt; 버전은 프로젝트에서 사용하고 있는 JPA 버전에 따라 달라집니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;    &lt;span class=&quot;token comment&quot;&gt;// Location.class&lt;/span&gt;
+
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;/*
+     * 4326은 데이터베이스에서 사용하는 여러 SRID 값 중, 일반적인 GPS기반의 위/경도 좌표를 저장할 때 쓰이는 값입니다.
+     * */&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;GeometryFactory&lt;/span&gt; geometryFactory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;GeometryFactory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PrecisionModel&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;4326&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Column&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;columnDefinition &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;geometry SRID 4326&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; nullable &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Point&lt;/span&gt; coordinate&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Coordinate&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Point&lt;/span&gt; point&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;coordinate &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; point&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Coordinate&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;double&lt;/span&gt; latitude&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;double&lt;/span&gt; longitude&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token function&quot;&gt;validateRange&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;latitude&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; longitude&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token class-name&quot;&gt;Point&lt;/span&gt; point &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; geometryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;createPoint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;locationtech&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;jts&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;geom&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;Coordinate&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;longitude&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; latitude&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Coordinate&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;point&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 코드에서 주의 깊게 보아야 할 점은 &lt;code class=&quot;language-text&quot;&gt;SRID&lt;/code&gt;입니다.
+&lt;br&gt; SRID는 여러 좌표(평면 좌표, 공간 좌표 등)를 나타내는 식별자라고 생각하시면 됩니다.
+&lt;br&gt; 만약, SRID 값이 서로 다를 경우, 공간 인덱스를 적용할 수 없습니다.
+&lt;br&gt; (엄밀히 이야기하자면, 인덱스를 타지 않는다고 표현하는 것이 맞는 것 같습니다.)
+&lt;br&gt; 힘들게 공간 인덱스를 적용했는데 ! 실제 쿼리에서 Full-Scan이 일어난다면.. 마음이 아프겠죠 ?
+&lt;br&gt; 코드 주석으로도 남겨져 있지만, 일반적인 위/경도 좌표를 저장할 때 쓰이는 값인 &lt;code class=&quot;language-text&quot;&gt;4326&lt;/code&gt;으로 SRID 값을 설정하였습니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;    &lt;span class=&quot;token comment&quot;&gt;// LocationRepository.class&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Query&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;token string&quot;&gt;&quot;SELECT l FROM Location l &quot;&lt;/span&gt;
+                    &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;WHERE ST_Contains(ST_Buffer(:coordinate, :distance), l.coordinate.coordinate)&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Location&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByCoordinateAndDistanceInMeters&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;token annotation punctuation&quot;&gt;@Param&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;coordinate&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Point&lt;/span&gt; coordinate&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;token annotation punctuation&quot;&gt;@Param&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;distance&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;double&lt;/span&gt; distance
+    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;드디어 마지막 단계입니다.
+&lt;br&gt; 위 코드에서 &lt;code class=&quot;language-text&quot;&gt;ST_Contains&lt;/code&gt;와 &lt;code class=&quot;language-text&quot;&gt;ST_Buffer&lt;/code&gt;라는 함수가 생소하실 텐데요.
+&lt;br&gt; 이는 MySQL에서 공간 인덱스를 지원해 주는 함수입니다.
+&lt;br&gt; 각 함수를 간단하게 설명하자면 다음과 같습니다.
+&lt;strong&gt;&lt;br&gt; ST_Buffer(Coordinate, Distance) : Coordinate로부터, Distance(Meter)내에 존재하는 MBR을 반환한다.&lt;/strong&gt;
+&lt;strong&gt;&lt;br&gt; ST_Contains(MBR, Coordinate) : MBR 이내에 해당 Coordinate의 포함 여부를 반환한다.&lt;/strong&gt;
+&lt;br&gt; 이처럼, MySQL에서 지원해주는 함수를 통해 공간 인덱스를 적용할 모든 준비가 끝났습니다.&lt;/p&gt;
+&lt;p&gt;물론, 위 로직에서는 한 가지 문제가 존재합니다.
+&lt;br&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 282px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4a703b890030da2757d4709ef387cf27/75fda/st_buffer-st_contains.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 95.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAAsTAAALEwEAmpwYAAACaklEQVR42o2Uz0sbQRTH/VP0oKjg7x8XQS8qCOKPsydvXiQ5eNGDPzBUhYKYksbSELQE66qYtiElevAHKJQWGgvSaw89FCnYRO12d7Mz376ZTdbsZtNm4TGzb9989r3vvJkqzjkKxhgrMW6aDvOMKWJUFb8AwpwPc5nX4wkUz+d0GkepFI5PTpA8P8enw0P8DAaRCwRgLi/jdn0dV8oe3p+d4ej0FMcUe3F56YA6gPuKggVa/HRlBR9HRqDW14PX1ADV1dLEXK+txfXgIJ4tLWFhdRUvwuHywHgigeDaGm6GhoCGBvD2dqCz89E6OixfYyOyfX2I0M+jsZhUyhN4kEziijITCxgtRlubp8lvFPOtvx9b29ulGdJWwSTnh0gEGgVCZFEGVjAusqUqLhYXocvdYwUgvZhMOm/m5wHSSJZXARCk8Y/JSeRkiqyoZNFP5DN8fqCuriIg8mUb4+Oy2ZwainRFoj6fBfyHfm5gbmzMDbTqN2jIzM5WXLIEkoa3ExNSf7g3RQCvNzaQI10qATIRQ7FfZmbcmyJKttrm3Zs4vvf2Ai0tMP/XNjT+6u7G3mZY6i8Ynn0Yo7JNCkRrK1hXl93QsqlpLnxcgOl7gjR/ubNjl1sCfBuPI0DndX9uDpmeHik6b2oCmpulyTn5VIIm/X48IYm2olF3Y8MGpuiwh0MhPKfuf0Vjenoad6OjYAMD4HQqfg8P4+vUFF4TKEQxm3SOlV3F+ywLpqZpUFUVGtmDriNDQj/oBsy7e7Bs1vbdG4aMEbF/aE3Z+1Ba/lbkVurIDyiuxHkHltyHcDi9Lk27+csCYc//Al2kyPAhJdWGAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img.png&apos; title=&apos;&apos; src=&apos;/static/4a703b890030da2757d4709ef387cf27/75fda/st_buffer-st_contains.png&apos; srcset=&apos;/static/4a703b890030da2757d4709ef387cf27/e7570/st_buffer-st_contains.png 170w,
+/static/4a703b890030da2757d4709ef387cf27/75fda/st_buffer-st_contains.png 282w&apos; sizes=&apos;(max-width: 282px) 100vw, 282px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;img.png&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;출처 : 매튜&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;위 사진 속 원의 원점이 좌표라고 가정하면 특정 거리 내의 좌표들은 빨간색 원 이내에 존재해야 합니다.
+&lt;br&gt; 하지만, 위 로직에서는 회색의 잉여 공간(?)이 존재하게 됩니다.
+&lt;br&gt; 즉, 특정 거리보다 더 멀리 있는 좌표들도 조회할 수 있게 되는 문제가 발생합니다.
+&lt;br&gt; 이를 해결하는 방법은 &lt;code class=&quot;language-text&quot;&gt;ST_DISTANCE&lt;/code&gt;라는 함수를 사용하는 것입니다.
+&lt;br&gt; 하지만, 해당 함수는 공간 인덱스를 지원하지 않는다는 단점이 존재합니다.
+&lt;br&gt; 정확성이 요구되는 서비스라면, 공간 인덱스를 사용하기 어렵다는 뜻이죠.
+&lt;br&gt; 우리 서비스에서는 &lt;code class=&quot;language-text&quot;&gt;엄청난 정확성을 요구하지 않는다는 점&lt;/code&gt;과 &lt;code class=&quot;language-text&quot;&gt;성능 향상&lt;/code&gt;의 이유에서 위의 로직을 그대로 가져가기로 결정했습니다. &lt;/p&gt;
+&lt;hr&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;TABLE&lt;/span&gt; location &lt;span class=&quot;token keyword&quot;&gt;ADD&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;COLUMN&lt;/span&gt; coordinate &lt;span class=&quot;token keyword&quot;&gt;GEOMETRY&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;NOT&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;NULL&lt;/span&gt; SRID &lt;span class=&quot;token number&quot;&gt;4326&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;만약, 해당 테이블 새로 생성한 것이 아니라, 기존 테이블 구조를 변경한다면 SRID 값을 명시적으로 설정해 주어야 합니다.&lt;/strong&gt;
+&lt;strong&gt;&lt;br&gt; 단순히 컬럼만 추가한다면, SRID 값이 0으로 설정되기 때문이죠.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;create&lt;/span&gt; spatial &lt;span class=&quot;token keyword&quot;&gt;index&lt;/span&gt; location_idx01 &lt;span class=&quot;token keyword&quot;&gt;on&lt;/span&gt; location&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;coordinate&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;마지막으로, 데이터베이스에 위와 같은 쿼리를 수행함으로써 공간 인덱스 적용이 끝나게 됩니다.&lt;/p&gt;
+&lt;h3&gt;성능 테스트&lt;/h3&gt;
+&lt;p&gt;총 데이터는 약 10만건이 존재하며, 1km 이내의 데이터, 3km 이내의 데이터 조회를 수행하였습니다.&lt;/p&gt;
+&lt;p&gt;공간 인덱스 적용 전
+1km 이내 (40건)&lt;br&gt;
+&lt;img src=&quot;.index_image%2Ftest-not-spatial-1km.png&quot; alt=&quot;test-not-spatial-1km.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;3km 이내 (300건)&lt;br&gt;
+&lt;img src=&quot;.index_image%2Ftest-not-spatial-3km.png&quot; alt=&quot;test-not-spatial-3km.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;공간 인덱스 적용 후
+1km 이내 (40건)&lt;br&gt;
+&lt;img src=&quot;.index_image%2Ftest-spatial-1km.png&quot; alt=&quot;test-spatial-1km.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;3km 이내 (300건)&lt;br&gt;
+&lt;img src=&quot;.index_image%2Ftest-spatial-3km.png&quot; alt=&quot;test-spatial-3km.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;성능이 최소 10배 이상 차이 나는 것을 확인할 수 있었습니다.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;예비군으로 인해, 대신 성능 테스트를 진행해 준 &lt;code class=&quot;language-text&quot;&gt;준팍&lt;/code&gt; 고맙습니다 !&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;마치며&lt;/h3&gt;
+&lt;p&gt;공간 인덱스 적용을 위해 사용한 함수들은 &lt;code class=&quot;language-text&quot;&gt;MySQL&lt;/code&gt;에서 지원하는 함수입니다.
+&lt;br&gt; 즉, 테스트 환경이 &lt;code class=&quot;language-text&quot;&gt;H2&lt;/code&gt;라면 오류가 발생할 수 있습니다.
+&lt;br&gt; &lt;code class=&quot;language-text&quot;&gt;H2&lt;/code&gt;에서는 지원해 주지 않는 함수들이기 때문이죠.
+&lt;br&gt; 이런 상황에서는 &lt;code class=&quot;language-text&quot;&gt;TestContainer&lt;/code&gt;를 통해 해결할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;테스트 환경이 &lt;code class=&quot;language-text&quot;&gt;MySQL&lt;/code&gt;이더라도, &lt;code class=&quot;language-text&quot;&gt;@DataJpaTest&lt;/code&gt;를 사용한다면 오류가 발생할 수 있습니다.
+&lt;br&gt; 내부적으로 인메모리 &lt;code class=&quot;language-text&quot;&gt;H2&lt;/code&gt;를 사용하기 때문인데요.
+&lt;br&gt; &lt;code class=&quot;language-text&quot;&gt;@AutoConfigureTestDatabase(replace = Replace.NONE)&lt;/code&gt;설정을 통해 해결할 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;참고&lt;/h3&gt;
+&lt;p&gt;Real My SQL 8.0 1판/2판&lt;/p&gt;</content:encoded></item><item><title><![CDATA[괜찮을지도 사이트 최적화 진행]]></title><description><![CDATA[…]]></description><link>https://map-befine-official.github.io/how-to-optimize-website/</link><guid isPermaLink="false">https://map-befine-official.github.io/how-to-optimize-website/</guid><pubDate>Wed, 18 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 괜찮을지도팀의 &lt;code class=&quot;language-text&quot;&gt;패트릭&lt;/code&gt;이 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;홈페이지에서 용량을 많이 차지하고 페이지 로딩 속도에 영향을 미치는 이미지와 번들 사이즈 최적화를 진행하였습니다.&lt;/p&gt;
