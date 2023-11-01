@@ -15,7 +15,7 @@ tags:
 
 `괜찮을지도` 서비스는 아래와 같이, 위치와 관련된 정보를 별도의 테이블로 관리하고 있습니다.
 
-![diagram.png](.index_image%2Fdiagram.png)
+![diagram.png](.index_image/diagram.png)
 
 장소를 등록할 때, 주소 검색을 사용할 수도 있지만, **지도 위의 좌표를 클릭하여 등록**할 수도 있습니다.
 <br> 사용자들이 동일한 장소를 등록하기 위해 지도상의 특정 위치를 클릭한다고 가정해 보겠습니다.
@@ -41,7 +41,7 @@ tags:
 MySQL에서는 공간 정보를 나타내는 데이터 타입으로 Point, Line, Polygon, Geometry를 지원합니다. 
 <br> MBR은 이러한 데이터 타입을 감쌀 수 있는 최소 크기의 사각형을 의미합니다.
 
-![r-tree.png](.index_image%2Fr-tree.png)
+![r-tree.png](.index_image/r-tree.png)
 >출처 : Real My SQL 8.0
 
 이러한 MBR의 포함 관계를 위 사진처럼 나타낼 수 있습니다.
@@ -168,17 +168,17 @@ create spatial index location_idx01 on location(coordinate);
 
 공간 인덱스 적용 전
 1km 이내 (40건)<br>
-![test-not-spatial-1km.png](.index_image%2Ftest-not-spatial-1km.png)
+![test-not-spatial-1km.png](.index_image/test-not-spatial-1km.png)
 
 3km 이내 (300건)<br>
-![test-not-spatial-3km.png](.index_image%2Ftest-not-spatial-3km.png)
+![test-not-spatial-3km.png](.index_image/test-not-spatial-3km.png)
 
 공간 인덱스 적용 후
 1km 이내 (40건)<br>
-![test-spatial-1km.png](.index_image%2Ftest-spatial-1km.png)
+![test-spatial-1km.png](.index_image/test-spatial-1km.png)
 
 3km 이내 (300건)<br>
-![test-spatial-3km.png](.index_image%2Ftest-spatial-3km.png)
+![test-spatial-3km.png](.index_image/test-spatial-3km.png)
 
 **성능이 최소 10배 이상 차이 나는 것을 확인할 수 있었습니다.**
 
